@@ -1,50 +1,41 @@
-# Welcome to your Expo app 👋
+# Uni-traffic Mobile Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Prerequisites
 
-## Get started
+Before you start, ensure you have the following tools installed:
 
-1. Install dependencies
+- **[pnpm](https://pnpm.io/)**: A fast, disk space-efficient package manager. Install it globally by running:
+  ```bash
+  npm install -g pnpm
+  ```
+- **[Android Studio](https://developer.android.com/studio)** or **[Expo Go](https://expo.dev/client)**:
+   - If you're testing on an Android device, you need to either install Android Studio or use the Expo Go app.
+   - For iOS, use Expo Go (available on the App Store).
 
+## Setting Up the Project
+
+1. **Install dependencies**:
+   In the project directory, run the following command to install all required dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
-2. Start the app
-
+2. **Start the development server**:
+   After installing dependencies, start the project by running:
    ```bash
-    npx expo start
+   pnpm start
    ```
+   This will open the Expo development server in your browser.
 
-In the output, you'll find options to open the app in a
+3. **Run on your device**:
+   - **For Android**: If you have Android Studio installed, you can run the app directly on your Android emulator or connected device with:
+     ```bash
+     pnpm android
+     ```
+   - **For iOS**: If you are on macOS and have Xcode installed, you can run the app on an iOS simulator or connected device with:
+     ```bash
+     pnpm ios
+     ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+4. **Scan the QR code**:
+   If you're using Expo Go on your mobile device, scan the QR code displayed in the terminal or on the webpage opened by `pnpm start` to view the app.
