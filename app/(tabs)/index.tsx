@@ -1,17 +1,48 @@
 import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { Text, View} from '@/components/Themed';
 import React from 'react';
+import { useState } from 'react';
+import { rgbaColor } from 'react-native-reanimated/lib/typescript/Colors';
 
 export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleLogin = () => {
+    if (username === 'test' && password === 'password'){
+      setErrorMessage('');
+      alert('Login successful');
+    }
+    else{
+      setErrorMessage('Invalid login, please try again');
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.containerBox}>
         <Text style={styles.title}>UNITRAFFIC</Text>
-        <TextInput style={styles.input} placeholder="Username"></TextInput>
-        <TextInput style={styles.input} placeholder="Password"></TextInput>
-        <TouchableOpacity style={styles.button}>
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+
+        <TextInput style={styles.input} 
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername} 
+        ></TextInput>
+        
+        <TextInput style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword} 
+        ></TextInput>
+
+        <TouchableOpacity 
+        style={styles.button}
+        onPress={handleLogin}>
           <Text style={styles.textButton}>Login</Text>
         </TouchableOpacity>
+
         <TouchableOpacity>
           <Text style={styles.forgotPassword}>forgot password?</Text>
         </TouchableOpacity>
@@ -74,6 +105,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textDecorationLine: "underline",
     color: "black",
+  },
+
+  errorText: {
+    color: "rgb(128, 40, 40)",
+    fontSize: 14,
+    margin: 5,
+    backgroundColor: "rgba(253, 140, 140, 0.9)",
+    borderRadius: 5,
+    padding: 5,
+    paddingHorizontal: 10,
   }
 
 });
