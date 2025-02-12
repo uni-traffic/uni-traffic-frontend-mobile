@@ -6,6 +6,7 @@ import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 const forgotPassword = () => {
   return (
     <View style={styles.container}>
+      <View style={styles.outerBox} />
       <View style={styles.containerBox}>
         <Text style={styles.description}>To reset your password, submit your email address below. 
           If we can find you in the database, an email will be sent to your email address,
@@ -35,6 +36,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  outerBox: {
+    position: 'absolute',
+    width: '90%', 
+    height: '45%', 
+    backgroundColor: 'white',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: 'black',
+    zIndex: -1, 
+  },
+
   containerBox: {
     borderWidth: 1.5,
     borderColor: "black",
@@ -43,6 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 10,
+    backgroundColor: 'white',
   },
 
   separator: {
@@ -50,7 +63,7 @@ const styles = StyleSheet.create({
     height: 0.1 ,
     width: 200,
     backgroundColor: "black",
-    alignSelf: "center"
+    alignSelf: "center",
   },
 
   title: {
