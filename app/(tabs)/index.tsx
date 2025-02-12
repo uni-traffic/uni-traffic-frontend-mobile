@@ -1,14 +1,17 @@
-import { StyleSheet } from 'react-native';
-
+import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { Text, View} from '@/components/Themed';
+import React from 'react';
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Text style={styles.title}>UNITRAFFIC</Text>
+      <TextInput style={styles.input} placeholder="Username"></TextInput>
+      <TextInput style={styles.input} placeholder="Password"></TextInput>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.textButton}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -22,10 +25,33 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    margin: 10
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+
+  input: {
+    width: 200,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    margin: 5
   },
+
+  button: {
+    width: 200,
+    height: 40,
+    borderWidth: 1,
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    margin: 10
+  },
+
+  textButton: {
+    color: 'white',
+    fontWeight: 'bold',
+  }
+
 });
