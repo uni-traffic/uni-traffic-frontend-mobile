@@ -2,7 +2,7 @@ import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { Text, View} from '@/components/Themed';
 import React from 'react';
 
-export default function TabOneScreen() {
+export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.containerBox}>
