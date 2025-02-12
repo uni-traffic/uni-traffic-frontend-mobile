@@ -27,7 +27,7 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
-        name="index"
+        name="login"
         options={{
           title: 'Login',
           headerShown: false,
@@ -52,7 +52,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          title: 'Index',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
