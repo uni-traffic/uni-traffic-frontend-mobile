@@ -2,7 +2,7 @@ import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { Text, View} from '@/components/Themed';
 import React from 'react';
 import { useState } from 'react';
-import { rgbaColor } from 'react-native-reanimated/lib/typescript/Colors';
+import { Link } from 'expo-router';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -22,6 +22,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.containerBox}>
+
         <Text style={styles.title}>UNITRAFFIC</Text>
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
@@ -44,8 +45,11 @@ export default function Login() {
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Text style={styles.forgotPassword}>forgot password?</Text>
+          <Link href="/forgot-password">
+            <Text style={styles.forgotPassword}>forgot password?</Text>
+          </Link>
         </TouchableOpacity>
+
       </View>
     </View>
   );
