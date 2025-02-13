@@ -12,7 +12,7 @@ const ForgotPassword = () => {
           If we can find you in the database, an email will be sent to your email address,
           with instructions how to get access again.</Text>
         {/* supposedly a horizontal line but it's not visible? */}
-        <Text style={styles.separator}></Text>
+        <Text style={styles.separator} />
         <Text style={styles.title}>Enter Email Address</Text>
         <TextInput style={styles.input}
           placeholder="Email"

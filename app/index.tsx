@@ -6,15 +6,13 @@ import { useRouter } from 'expo-router';
 export default function LandingPage() {
   const router = useRouter();
   return (
-    <>
-      <View style={styles.containerBox}>
-        <Image source={require('../assets/images/UnitrafficLogo.png')} style={styles.logoImage} />
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/auth/login")}>
-          <Text style={styles.textButton}>Get Started</Text>
-        </TouchableOpacity>
-        <Text style={styles.unitrafficDescription}>UniTraffic ensures hassle-free vehicle entry at New Era University by verifying sticker registration and tracking violations with a quick scan.</Text>
-      </View>
-    </>
+    <View style={styles.containerBox}>
+      <Image source={require('../assets/images/UnitrafficLogo.png')} style={styles.logoImage} />
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/auth/login")}>
+        <Text style={styles.textButton}>Get Started</Text>
+      </TouchableOpacity>
+      <Text style={styles.unitrafficDescription}>UniTraffic ensures hassle-free vehicle entry at New Era University by verifying sticker registration and tracking violations with a quick scan.</Text>
+    </View>
   );
 }
 
