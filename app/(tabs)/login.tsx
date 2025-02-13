@@ -22,34 +22,29 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.containerBox}>
-
         <Text style={styles.title}>UNITRAFFIC</Text>
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-
         <TextInput style={styles.input} 
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername} 
-        ></TextInput>
-        
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername} 
+        />
         <TextInput style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword} 
-        ></TextInput>
-
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={true} 
+        />
         <TouchableOpacity 
-        style={styles.button}
-        onPress={handleLogin}>
+          style={styles.button}
+          onPress={handleLogin}>
           <Text style={styles.textButton}>Login</Text>
         </TouchableOpacity>
-
         <TouchableOpacity>
           <Link href="/forgot-password">
             <Text style={styles.forgotPassword}>forgot password?</Text>
           </Link>
         </TouchableOpacity>
-
       </View>
     </View>
   );
@@ -61,7 +56,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   containerBox: {
     borderWidth: 1.5,
     borderColor: "black",
@@ -70,14 +64,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     alignItems: 'center',
     justifyContent: 'center',
-
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     margin: 10
   },
-
   input: {
     width: 250,
     height: 40,
@@ -88,7 +80,6 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10
   },
-
   button: {
     width: 250,
     height: 40,
@@ -99,19 +90,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 10
   },
-
   textButton: {
     color: 'white',
     fontWeight: 'bold',
   },
-
   forgotPassword: {
     fontSize: 14,
     fontWeight: "bold",
     textDecorationLine: "underline",
     color: "black",
   },
-
   errorText: {
     color: "rgb(128, 40, 40)",
     fontSize: 14,
@@ -121,5 +109,4 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingHorizontal: 10,
   }
-
 });

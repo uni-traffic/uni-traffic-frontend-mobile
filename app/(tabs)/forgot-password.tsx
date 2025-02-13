@@ -2,8 +2,7 @@ import React from 'react';
 import { Text, View } from "react-native";
 import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 
-
-const forgotPassword = () => {
+const ForgotPassword = () => {
   return (
     <View style={styles.container}>
       <View style={styles.outerBox} />
@@ -11,19 +10,15 @@ const forgotPassword = () => {
         <Text style={styles.description}>To reset your password, submit your email address below. 
           If we can find you in the database, an email will be sent to your email address,
           with instructions how to get access again.</Text>
-
         {/* supposedly a horizontal line but it's not visible? */}
         <Text style={styles.separator}></Text> 
-
         <Text style={styles.title}>Enter Email Address</Text>
         <TextInput style={styles.input} 
-        placeholder="Email"
-        ></TextInput>
-
+          placeholder="Email"
+        />
         <TouchableOpacity style={styles.button}>
           <Text style={styles.textButton}>Confirm</Text>
         </TouchableOpacity>
-        
       </View>
     </View>
   );
@@ -35,7 +30,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   outerBox: {
     position: 'absolute',
     width: '90%', 
@@ -46,7 +40,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     zIndex: -1, 
   },
-
   containerBox: {
     borderWidth: 1.5,
     borderColor: "black",
@@ -57,7 +50,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: 'white',
   },
-
   separator: {
     marginVertical: 10,
     height: 0.1 ,
@@ -65,20 +57,17 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignSelf: "center",
   },
-
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     margin: 10,
     alignSelf: "baseline"
   },
-
   description: {
     textAlign: 'left', 
     justifyContent: 'center',
     marginBottom: 10,
   },
-
   input: {
     width: 350,
     height: 40,
@@ -88,7 +77,6 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10,
   },
-
   button: {
     width: 150,
     height: 40,
@@ -100,16 +88,10 @@ const styles = StyleSheet.create({
     margin: 10,
     alignSelf: "flex-end"
   },
-
   textButton: {
     color: 'white',
     fontWeight: 'bold',
   },
-
 });
 
-
-
-
-export default forgotPassword;
-
+export default ForgotPassword;
