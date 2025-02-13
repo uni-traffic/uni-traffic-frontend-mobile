@@ -41,7 +41,7 @@ export default function Login() {
           <Text style={styles.textButton}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Link href="/forgot-password">
+          <Link href="/auth/forgot-password">
             <Text style={styles.forgotPassword}>forgot password?</Text>
           </Link>
         </TouchableOpacity>
