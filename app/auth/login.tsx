@@ -1,5 +1,5 @@
 import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import { Text, View} from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import React from 'react';
 import { useState } from 'react';
 import { Link } from 'expo-router';
@@ -10,11 +10,11 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = () => {
-    if (username === 'test' && password === 'password'){
+    if (username === 'test' && password === 'password') {
       setErrorMessage('');
       alert('Login successful');
     }
-    else{
+    else {
       setErrorMessage('Invalid login, please try again');
     }
   }
@@ -24,18 +24,18 @@ export default function Login() {
       <View style={styles.containerBox}>
         <Text style={styles.title}>UNITRAFFIC</Text>
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-        <TextInput style={styles.input} 
+        <TextInput style={styles.input}
           placeholder="Username"
           value={username}
-          onChangeText={setUsername} 
+          onChangeText={setUsername}
         />
         <TextInput style={styles.input}
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry={true} 
+          secureTextEntry={true}
         />
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.button}
           onPress={handleLogin}>
           <Text style={styles.textButton}>Login</Text>
