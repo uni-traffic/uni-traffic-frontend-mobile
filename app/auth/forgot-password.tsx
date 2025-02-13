@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import React from 'react';
 import { Text, View } from "react-native";
 import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
@@ -7,17 +8,19 @@ const ForgotPassword = () => {
     <View style={styles.container}>
       <View style={styles.outerBox} />
       <View style={styles.containerBox}>
-        <Text style={styles.description}>To reset your password, submit your email address below. 
+        <Text style={styles.description}>To reset your password, submit your email address below.
           If we can find you in the database, an email will be sent to your email address,
           with instructions how to get access again.</Text>
         {/* supposedly a horizontal line but it's not visible? */}
-        <Text style={styles.separator}></Text> 
+        <Text style={styles.separator} />
         <Text style={styles.title}>Enter Email Address</Text>
-        <TextInput style={styles.input} 
+        <TextInput style={styles.input}
           placeholder="Email"
         />
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.textButton}>Confirm</Text>
+          <Link href='/auth/login'>
+            <Text style={styles.textButton}>Confirm</Text>
+          </Link>
         </TouchableOpacity>
       </View>
     </View>
@@ -32,13 +35,13 @@ const styles = StyleSheet.create({
   },
   outerBox: {
     position: 'absolute',
-    width: '90%', 
-    height: '45%', 
+    width: '90%',
+    height: '45%',
     backgroundColor: 'white',
     borderRadius: 12,
     borderWidth: 1.5,
     borderColor: 'black',
-    zIndex: -1, 
+    zIndex: -1,
   },
   containerBox: {
     borderWidth: 1.5,
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     marginVertical: 10,
-    height: 0.1 ,
+    height: 0.1,
     width: 200,
     backgroundColor: "black",
     alignSelf: "center",
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
     alignSelf: "baseline"
   },
   description: {
-    textAlign: 'left', 
+    textAlign: 'left',
     justifyContent: 'center',
     marginBottom: 10,
   },
