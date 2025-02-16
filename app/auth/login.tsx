@@ -1,29 +1,22 @@
-import { TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import React from 'react';
-import { useState } from 'react';
-import { Link } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from "@/context/authContext";
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const { login, error } = useAuth();
 
-  const handleLogin = () => {
-    if (username === 'test' && password === 'password') {
-      setErrorMessage('');
-      alert('Login successful');
-    }
-    else {
-      setErrorMessage('Invalid login, please try again');
-    }
-  }
+  const handleLogin = async () => {
+    await login(username, password);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.containerBox}>
         <Text style={styles.title}>UNITRAFFIC</Text>
-        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TextInput style={styles.input}
           placeholder="Username"
           value={username}
@@ -40,11 +33,11 @@ export default function Login() {
           onPress={handleLogin}>
           <Text style={styles.textButton}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Link href="/auth/forgot-password">
-            <Text style={styles.forgotPassword}>forgot password?</Text>
-          </Link>
-        </TouchableOpacity>
+        {/*<TouchableOpacity>*/}
+        {/*  <Link href="/auth/forgot-password">*/}
+        {/*    <Text style={styles.forgotPassword}>forgot password?</Text>*/}
+        {/*  </Link>*/}
+        {/*</TouchableOpacity>*/}
       </View>
     </View>
   );
