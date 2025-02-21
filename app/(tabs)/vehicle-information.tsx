@@ -1,16 +1,38 @@
 import { StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import React, {useState} from 'react'; // for testing
+import React, { useEffect, useState } from 'react'; 
+import { faker } from '@faker-js/faker';
 
 export default function VehicleInformation () {
-  // only for testing, can remove when no longer needed
   const [active, setActive] = useState(true);
   const [violations, setViolations] = useState<{ id: number; type: string; date: string; status: string; }[]>([]);
-
+  const [vehicle, setVehicle] = useState({
+    name: '',
+    licensePlate: '',
+    stickerNo: '',
+    type: '',
+    dateRegistered: '',
+  })
+  const generateRandomVehicle = () =>{
+    setVehicle({
+        name: faker.person.fullName(),
+        licensePlate: faker.string.alphanumeric(3).toUpperCase() + ' ' + faker.string.numeric(3),
+        stickerNo: faker.string.numeric(10),
+        type: faker.helpers.arrayElement(['Student', 'Admin', 'Staff', 'Security']),
+        dateRegistered: faker.string.numeric(2) + '/' + faker.string.numeric(2) + '/' + faker.string.numeric(4), 
+    })
+    clearViolation();
+  }
+  useEffect(() => {
+    generateRandomVehicle();
+  }, []);
   const addViolation = () => {
     setViolations([
       ...violations, 
-      { id: violations.length + 1, type: "Unauthorized Parking", date: "DD/MM/YYYY", status: "pending" }
+      { id: violations.length + 1, 
+        type: "Unauthorized Parking", 
+        date: faker.string.numeric(2) + '/' + faker.string.numeric(2) + '/' + faker.string.numeric(4), 
+        status: "pending" }
     ]);
   };
   const resolveViolation = () => {
@@ -53,7 +75,7 @@ export default function VehicleInformation () {
                         <Text style={styles.titleBody}>License Plate</Text>
                     </View>
                     <View style={styles.containerInfoContent}>
-                        <Text style={styles.infoBody}>ABC 123</Text>
+                        <Text style={styles.infoBody}>{vehicle.licensePlate}</Text>
                     </View>
                 </View>
                 <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
@@ -62,7 +84,7 @@ export default function VehicleInformation () {
                         <Text style={styles.titleBody}>Sticker No.</Text>
                     </View>
                     <View style={styles.containerInfoContent}>
-                        <Text style={styles.infoBody}>0123456789</Text>
+                        <Text style={styles.infoBody}>{vehicle.stickerNo}</Text>
                     </View>
                 </View>
                 <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
@@ -71,7 +93,7 @@ export default function VehicleInformation () {
                         <Text style={styles.titleBody}>Registered On</Text>
                     </View>
                     <View style={styles.containerInfoContent}>
-                        <Text style={styles.infoBody}>DD/MM/YYYY</Text>
+                        <Text style={styles.infoBody}>{vehicle.dateRegistered}</Text>
                     </View>
                 </View>
             </View>
@@ -90,7 +112,7 @@ export default function VehicleInformation () {
                         <Text style={styles.titleBody}>Name</Text>
                     </View>
                     <View style={styles.containerInfoContent}>
-                        <Text style={styles.infoBody}>John Doe</Text>
+                        <Text style={styles.infoBody}>{vehicle.name}</Text>
                     </View>
                 </View>
                 <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
@@ -99,7 +121,7 @@ export default function VehicleInformation () {
                         <Text style={styles.titleBody}>Type</Text>
                     </View>
                     <View style={styles.containerInfoContent}>
-                        <Text style={styles.infoBody}>Student</Text>
+                        <Text style={styles.infoBody}>{vehicle.type}</Text>
                     </View>
                 </View>
             </View>
@@ -126,9 +148,9 @@ export default function VehicleInformation () {
             </>
             ) : (
             // currently displays the first violation at the top regardless of status
-            violations.map((violation) => (
-                <>
-                <View key={violation.id} style={styles.containerInfoBody}>
+            violations.slice().reverse().map((violation) => (
+                <React.Fragment key={violation.id}>
+                <View style={styles.containerInfoBody}>
                     <View>
                         <Text style={styles.titleBody}>{violation.type}</Text>
                         <Text style={styles.textDate}>{violation.date}</Text>
@@ -140,7 +162,7 @@ export default function VehicleInformation () {
                     </View>
                 </View>
                 <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-                </>
+                </React.Fragment>
                 ))
             )}
             </View>
@@ -161,6 +183,10 @@ export default function VehicleInformation () {
                     style={styles.button}
                     onPress={resolveViolation} // test violations
                 ><Text>resolveViolation</Text></TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={generateRandomVehicle} // generate random info
+                ><Text>randomInfo</Text></TouchableOpacity>
             </View>
             {/* */}
         </View>
