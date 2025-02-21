@@ -3,7 +3,9 @@ import { Text, View } from '@/components/Themed';
 import React, {useState} from 'react'; // for testing
 
 export default function VehicleInformation () {
-  const [active, setActive] = useState(true);  
+  // only for testing, can remove when no longer needed
+  const [active, setActive] = useState(true);
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}
     style={styles.scrollView}>
@@ -78,11 +80,26 @@ export default function VehicleInformation () {
                     </View>
                 </View>
             </View>
+            {/* Violation details */}
             <View style={styles.containerInfo}>
-                <Text style={styles.title}>Info</Text>
-                <View style={styles.separator} darkColor="rgb(0, 0, 0)" />
+                {/* Vehicle details header */}
+                <View style={styles.containerInfoHeader}>
+                    <View style={styles.containerInfoContent}> 
+                        <Image source={require('../../assets/images/user-icon.png')} />
+                        <Text style={styles.title}>Owner Details</Text>
+                    </View>
+                </View>
+                {/* Violation details body */}
+                <View style={styles.containerInfoBody}>
+                    <View style={styles.containerInfoContent}>
+                        <Text style={styles.titleBody}>No violations found</Text>
+                    </View>
+                    <View style={styles.containerInfoContent}>
+                        <Text style={styles.infoBody}></Text>
+                    </View>
+                </View>
+                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             </View>
-
             {/* For testing, can remove if no longer needed */}
             <View style={styles.paddingBottom}>
                 <TouchableOpacity
@@ -156,6 +173,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontFamily: 'ROBOTO',
+    fontWeight: "400",
     marginHorizontal: 8,
   },
   titleBody: {
@@ -190,7 +208,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 2,
-    width: '80%',
+    width: '85%',
   },
   //for testing can remove if no longer needed
   button: {
