@@ -127,7 +127,7 @@ export default function VehicleInformation () {
             </View>
             {/* Violation details */}
             <View style={styles.containerInfo}>
-                {/* Vehicle details header */}
+                {/* Violation details header */}
                 <View style={styles.containerInfoHeader}>
                     <View style={styles.containerInfoContent}> 
                         <Image source={require('../../assets/images/violation-icon.png')} />
@@ -136,35 +136,33 @@ export default function VehicleInformation () {
                 </View>
                 {/* Violation details body */}
                 {violations.length === 0 ? (
-            // no Violations Found
-            <>
-                <View style={styles.containerInfoBody}>
-                    <View style={styles.containerInfoContent}>
-                        <Text style={styles.titleBody}>No violations found</Text>
+                <>
+                    <View style={styles.containerInfoBody}>
+                        <View style={styles.containerInfoContent}>
+                            <Text style={styles.titleBody}>No violations found</Text>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-                <View style={styles.marginBlock}/>
-            </>
-            ) : (
-            // currently displays the first violation at the top regardless of status
-            violations.slice().reverse().map((violation) => (
-                <React.Fragment key={violation.id}>
-                <View style={styles.containerInfoBody}>
-                    <View>
-                        <Text style={styles.titleBody}>{violation.type}</Text>
-                        <Text style={styles.textDate}>{violation.date}</Text>
+                    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                    <View style={styles.marginBlock}/>
+                </>
+                ) : (
+                violations.slice().reverse().map((violation) => (
+                    <React.Fragment key={violation.id}>
+                    <View style={styles.containerInfoBody}>
+                        <View>
+                            <Text style={styles.titleBody}>{violation.type}</Text>
+                            <Text style={styles.textDate}>{violation.date}</Text>
+                        </View>
+                        <View>
+                            <Text style={[ violation.status === "pending" ? styles.textPending : styles.textResolved]}>
+                                {violation.status}
+                            </Text>
+                        </View>
                     </View>
-                    <View>
-                        <Text style={[ violation.status === "pending" ? styles.textPending : styles.textResolved]}>
-                            {violation.status}
-                        </Text>
-                    </View>
-                </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-                </React.Fragment>
-                ))
-            )}
+                    <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                    </React.Fragment>
+                    ))
+                )}
             </View>
             {/* For testing, can remove if no longer needed */}
             <View style={styles.paddingBottom}>
@@ -174,7 +172,7 @@ export default function VehicleInformation () {
                 ><Text>setActive</Text></TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={addViolation} // test active and inactive colors
+                    onPress={addViolation} // test violations
                 ><Text>addViolation</Text></TouchableOpacity><TouchableOpacity
                     style={styles.button}
                     onPress={clearViolation} // test violations
