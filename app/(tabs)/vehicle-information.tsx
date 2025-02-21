@@ -5,7 +5,14 @@ import React, {useState} from 'react'; // for testing
 export default function VehicleInformation () {
   // only for testing, can remove when no longer needed
   const [active, setActive] = useState(true);
-  
+  const [violations, setViolations] = useState<{ id: number; type: string; date: string; status: string; }[]>([]);
+
+  const addViolation = () => {
+    setViolations([
+      ...violations, 
+      { id: violations.length + 1, type: "Unauthorized Parking", date: "DD/MM/YYYY", status: "pending" }
+    ]);
+  };
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}
     style={styles.scrollView}>
@@ -85,31 +92,46 @@ export default function VehicleInformation () {
                 {/* Vehicle details header */}
                 <View style={styles.containerInfoHeader}>
                     <View style={styles.containerInfoContent}> 
-                        <Image source={require('../../assets/images/user-icon.png')} />
-                        <Text style={styles.title}>Owner Details</Text>
+                        <Image source={require('../../assets/images/violation-icon.png')} />
+                        <Text style={styles.title}>Violation Details</Text>
                     </View>
                 </View>
                 {/* Violation details body */}
-                <View style={styles.containerInfoBody}>
-                    <View style={styles.containerInfoContent}>
-                        <Text style={styles.titleBody}>No violations found</Text>
-                    </View>
-                    <View style={styles.containerInfoContent}>
-                        <Text style={styles.infoBody}></Text>
+                {violations.length === 0 ? (
+            // No Violations Found
+            <View style={styles.containerInfoBody}>
+              <View style={styles.containerInfoContent}>
+                <Text style={styles.titleBody}>No violations found</Text>
+              </View>
+            </View>
+            ) : (
+            // List of Violations
+            violations.map((violation) => (
+              <View key={violation.id} style={styles.containerInfoBody}>
+                <View>
+                  <Text style={styles.titleBody}>{violation.type}</Text>
+                  <Text style={styles.infoBody}>{violation.date}</Text>
+                </View>
+                    <View>
+                        <Text style={[ violation.status === "pending" ? styles.textInactive : styles.textActive]}>
+                            {violation.status}
+                        </Text>
                     </View>
                 </View>
-                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                ))
+            )}
+            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             </View>
             {/* For testing, can remove if no longer needed */}
             <View style={styles.paddingBottom}>
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => setActive(!active)} // test active and inactive colors
-                />
+                ><Text>setActive</Text></TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => setActive(!active)} // test active and inactive colors
-                />
+                    onPress={addViolation} // test active and inactive colors
+                ><Text>addViolation</Text></TouchableOpacity>
             </View>
         </View>
     </ScrollView>
