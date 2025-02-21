@@ -13,6 +13,22 @@ export default function VehicleInformation () {
       { id: violations.length + 1, type: "Unauthorized Parking", date: "DD/MM/YYYY", status: "pending" }
     ]);
   };
+  const resolveViolation = () => {
+    setViolations((prevViolations) => {
+      const updatedViolations = [...prevViolations];
+      const index = updatedViolations.findIndex(v => v.status === "pending");
+  
+      if (index !== -1) {
+        updatedViolations[index] = { ...updatedViolations[index], status: "resolved" };
+      }
+  
+      return updatedViolations;
+    });
+  };
+  const clearViolation = () => {
+    setViolations([]);
+  };  
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}
     style={styles.scrollView}>
@@ -98,29 +114,35 @@ export default function VehicleInformation () {
                 </View>
                 {/* Violation details body */}
                 {violations.length === 0 ? (
-            // No Violations Found
-            <View style={styles.containerInfoBody}>
-              <View style={styles.containerInfoContent}>
-                <Text style={styles.titleBody}>No violations found</Text>
-              </View>
-            </View>
-            ) : (
-            // List of Violations
-            violations.map((violation) => (
-              <View key={violation.id} style={styles.containerInfoBody}>
-                <View>
-                  <Text style={styles.titleBody}>{violation.type}</Text>
-                  <Text style={styles.infoBody}>{violation.date}</Text>
+            // no Violations Found
+            <>
+                <View style={styles.containerInfoBody}>
+                    <View style={styles.containerInfoContent}>
+                        <Text style={styles.titleBody}>No violations found</Text>
+                    </View>
                 </View>
+                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                <View style={styles.marginBlock}/>
+            </>
+            ) : (
+            // currently displays the first violation at the top regardless of status
+            violations.map((violation) => (
+                <>
+                <View key={violation.id} style={styles.containerInfoBody}>
                     <View>
-                        <Text style={[ violation.status === "pending" ? styles.textInactive : styles.textActive]}>
+                        <Text style={styles.titleBody}>{violation.type}</Text>
+                        <Text style={styles.textDate}>{violation.date}</Text>
+                    </View>
+                    <View>
+                        <Text style={[ violation.status === "pending" ? styles.textPending : styles.textResolved]}>
                             {violation.status}
                         </Text>
                     </View>
                 </View>
+                <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+                </>
                 ))
             )}
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             </View>
             {/* For testing, can remove if no longer needed */}
             <View style={styles.paddingBottom}>
@@ -131,8 +153,16 @@ export default function VehicleInformation () {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={addViolation} // test active and inactive colors
-                ><Text>addViolation</Text></TouchableOpacity>
+                ><Text>addViolation</Text></TouchableOpacity><TouchableOpacity
+                    style={styles.button}
+                    onPress={clearViolation} // test violations
+                ><Text>clearViolation</Text></TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={resolveViolation} // test violations
+                ><Text>resolveViolation</Text></TouchableOpacity>
             </View>
+            {/* */}
         </View>
     </ScrollView>
   );
@@ -228,9 +258,39 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"  
   },
+  textPending: {
+    backgroundColor: "#D99C0B",
+    fontFamily: 'ROBOTO-MEDIUM',
+    color: "white",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    fontWeight: "bold",
+    textAlign: "center"  
+  },
+  textResolved: {
+    backgroundColor: "#03CD09",
+    fontFamily: 'ROBOTO-MEDIUM',
+    color: "white",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    fontWeight: "bold",
+    textAlign: "center"  
+  },
+  textDate: {
+    fontFamily: "Roboto", 
+    fontSize: 12, 
+    fontWeight: "400", 
+    letterSpacing: 0.5,
+    color: '#757575',
+  },
   separator: {
     height: 2,
     width: '85%',
+  },
+  marginBlock:{
+    margin: 20,
   },
   //for testing can remove if no longer needed
   button: {
