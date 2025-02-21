@@ -1,29 +1,26 @@
 import { StyleSheet } from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import {  View } from '@/components/Themed';
+import SecurityDashboard from '@/components/security/dashboard';
+import { useAuth } from '@/context/authContext';
+import { AdminDashboard } from '@/components/admin/dashboard';
+import { UserDashboard } from '@/components/user/dashboard';
 
 export default function Dashboard () {
+  const { user } = useAuth();
+    
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Dashboard</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    {user?.role === "SECURITY" && <SecurityDashboard/> }
+    {user?.role === "ADMIN" && <AdminDashboard/>}
+    {(user?.role === "STUDENT" || user?.role === "STAFF") && <UserDashboard/> }
+  </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
 });
