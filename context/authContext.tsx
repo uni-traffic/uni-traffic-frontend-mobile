@@ -54,7 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       await setToken(accessToken);
 
-      setUser(null);
       router.replace("/(tabs)");
     } catch (err) {
       const error = err as AxiosError;

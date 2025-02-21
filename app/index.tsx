@@ -1,10 +1,10 @@
-import React from 'react';
 import { StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
 
 export default function LandingPage() {
   const router = useRouter();
+  
   return (
     <View style={styles.containerBox}>
       <Image source={require('../assets/images/UnitrafficLogo.png')} style={styles.logoImage} />
