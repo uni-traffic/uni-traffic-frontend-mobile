@@ -1,11 +1,11 @@
-import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Text, View } from '@/components/Themed';
-import React, { useEffect, useState } from 'react';
+import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/authContext";
+import { useState } from "react";
+import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const { login, error } = useAuth();
 
   const handleLogin = async () => {
@@ -17,20 +17,20 @@ export default function Login() {
       <View style={styles.containerBox}>
         <Text style={styles.title}>UNITRAFFIC</Text>
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <TextInput style={styles.input}
+        <TextInput
+          style={styles.input}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
         />
-        <TextInput style={styles.input}
+        <TextInput
+          style={styles.input}
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry={true}
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleLogin}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.textButton}>Login</Text>
         </TouchableOpacity>
         {/*<TouchableOpacity>*/}
@@ -46,8 +46,9 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#EBEAF0"
   },
   containerBox: {
     borderWidth: 1.5,
@@ -55,13 +56,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     paddingHorizontal: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white"
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
-    margin: 10
+    fontWeight: "bold",
+    margin: 10,
+    color: "black"
   },
   input: {
     width: 250,
@@ -84,14 +87,14 @@ const styles = StyleSheet.create({
     margin: 10
   },
   textButton: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold"
   },
   forgotPassword: {
     fontSize: 14,
     fontWeight: "bold",
     textDecorationLine: "underline",
-    color: "black",
+    color: "black"
   },
   errorText: {
     color: "rgb(128, 40, 40)",
@@ -100,6 +103,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(253, 140, 140, 0.9)",
     borderRadius: 5,
     padding: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 10
   }
 });

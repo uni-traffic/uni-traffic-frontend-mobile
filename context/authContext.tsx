@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 import type { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
 import type React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
   user: { role: string } | null;
@@ -54,8 +54,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       await setToken(accessToken);
 
-      setUser(null);
-      router.replace("/(tabs)");
+      if (role === "SECURITY") {
+        router.replace("/security");
+        return;
+      }
+
+      router.replace("/(user)");
     } catch (err) {
       const error = err as AxiosError;
 
@@ -70,10 +74,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   const logout = async () => {
     await deleteToken();
