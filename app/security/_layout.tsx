@@ -45,6 +45,7 @@ export default function TabLayout() {
         options={{
           title: "",
           headerShown: false,
+          tabBarStyle: { display: "none" },
           tabBarIcon: () => (
             <View
               style={{
