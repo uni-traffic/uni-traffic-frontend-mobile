@@ -1,5 +1,5 @@
-import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/authContext";
+import { Text, View } from "react-native";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 export default function Profile() {
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#EBEAF0"
   },
   title: {
     fontSize: 20,

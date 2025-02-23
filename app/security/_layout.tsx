@@ -4,10 +4,11 @@ import Colors from "@/constants/Colors";
 import { useAuth } from "@/context/authContext";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { Pressable, TouchableOpacity, View } from "react-native";
 
 export default function TabLayout() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const { user } = useAuth();
 
@@ -59,7 +60,7 @@ export default function TabLayout() {
                 marginBottom: 32
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push("/security/camera")}>
                 <FontAwesome name="qrcode" size={28} color={"black"} />
               </TouchableOpacity>
             </View>
