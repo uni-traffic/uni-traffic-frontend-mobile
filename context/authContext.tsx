@@ -1,7 +1,6 @@
 import api from "@/api/axios";
-import { deleteToken, setToken } from "@/lib/tokenStorage";
-import type { User } from "@/lib/types";
-import { faker } from "@faker-js/faker";
+import { deleteItem, setItem } from "@/lib/tokenStorage";
+import type { LoginResponse, User } from "@/lib/types";
 import type { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
 import type React from "react";
@@ -32,29 +31,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     try {
       setIsLoading(true);
+
       const response: AxiosResponse = await api.post("/auth/login", {
         username,
         password
       });
-
       if (response.status !== 200) {
         setError("Unknown response");
         return;
       }
 
-      const { accessToken, role } = response.data;
+      const { user, accessToken, appKey }: LoginResponse = response.data;
 
-      setUser({
-        id: faker.string.uuid(),
-        username: username,
-        role,
-        email: faker.internet.email(),
-        lastName: faker.person.lastName(),
-        firstName: faker.person.firstName()
-      });
-      await setToken(accessToken);
+      setUser(user);
+      await setItem("AUTH_TOKEN", accessToken);
+      await setItem("RECOGNIZER_TOKEN", appKey);
 
-      if (role === "SECURITY") {
+      if (user.role === "SECURITY") {
         router.replace("/security");
         return;
       }
@@ -76,7 +69,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    await deleteToken();
+    await deleteItem("AUTH_TOKEN");
+    await deleteItem("RECOGNIZER_TOKEN");
     setUser(null);
 
     router.replace("/auth/login");

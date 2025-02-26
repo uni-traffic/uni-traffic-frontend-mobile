@@ -1,8 +1,10 @@
+import { ComingSoon } from "@/components/coming-soon";
 import type { User, Vehicle } from "@/lib/types";
 import { FontAwesome } from "@expo/vector-icons";
 import { faker } from "@faker-js/faker";
 import { format } from "date-fns";
-import { StyleSheet, Text, TouchableOpacity, View, FlatList, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const user: User = {
   id: faker.string.uuid(),
@@ -15,29 +17,39 @@ const user: User = {
 
 const vehicle = (): Vehicle => ({
   id: faker.string.uuid(),
-  ownerId: faker.string.uuid(),
+  ownerId: user.id,
+  licensePlate: faker.vehicle.vrm().toUpperCase(),
+  make: faker.vehicle.manufacturer(),
+  model: faker.date.past().getFullYear().toString(),
+  series: faker.vehicle.model(),
+  color: faker.vehicle.color(),
+  type: faker.helpers.arrayElement(["CAR", "MOTORCYCLE"]),
+  images: [faker.image.url(), faker.image.url(), faker.image.url()],
+  stickerNumber: "12345678",
   isActive: faker.datatype.boolean(),
-  licenseNumber: faker.vehicle.vrm(),
-  stickerNumber: faker.number.bigInt({ min: 10_000_000, max: 99_999_999 }).toString(),
   owner: user
 });
 
 const scannedVehicles: Vehicle[] = Array.from({ length: 6 }, vehicle);
 
 const SecurityDashboard = () => {
+  const router = useRouter();
+
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <FontAwesome name="shield" size={58} color="white" style={styles.icon} />
           <Text style={styles.headerText}>SECURITY</Text>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/vehicle")}>
+          <ComingSoon />
           <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>New Violation</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.recentlyScannedVehicle}>
+        <ComingSoon />
         <View style={styles.recentHeader}>
           <Text style={styles.recentTitle}>Recently Scanned Vehicles</Text>
         </View>
@@ -49,7 +61,7 @@ const SecurityDashboard = () => {
               <View style={styles.vehicleItem}>
                 <FontAwesome name="car" size={20} color="black" />
                 <View style={styles.vehicleInfo}>
-                  <Text style={styles.licenseNumber}>{item.licenseNumber}</Text>
+                  <Text style={styles.licenseNumber}>{item.licensePlate}</Text>
                   <Text style={styles.timestamp}>{format(faker.date.past(), "hh:mm a")}</Text>
                 </View>
                 <TouchableOpacity>
@@ -60,7 +72,7 @@ const SecurityDashboard = () => {
           />
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -95,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: "black",
     alignSelf: "flex-end",

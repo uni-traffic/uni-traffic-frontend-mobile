@@ -1,6 +1,8 @@
+import { getItem } from "@/lib/tokenStorage";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import type { CameraCapturedPicture } from "expo-camera";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -20,7 +22,10 @@ const PhotoPreview = ({
   photo: CameraCapturedPicture;
   handleRetakePhoto: () => void;
 }) => {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(true);
+  const [placeHolder, setPlaceHolder] = useState<string>("Enter license plate...");
   const [licensePlate, setLicensePlate] = useState("");
 
   const handleUpload = async () => {
@@ -35,7 +40,7 @@ const PhotoPreview = ({
       type: `image/${fileType}`
     });
 
-    const token = "YOUR_TOKEN_HERE";
+    const token = await getItem("RECOGNIZER_TOKEN");
     try {
       const response = await axios.post(
         "https://api.platerecognizer.com/v1/plate-reader",
@@ -54,18 +59,27 @@ const PhotoPreview = ({
         return;
       }
 
-      setLicensePlate("Failed to extract license plate from image.");
-    } catch (error) {
-      setLicensePlate("Failed to extract license plate from image.");
-      console.error("Upload failed:", error);
+      setPlaceHolder("Failed to extract license plate.");
+    } catch {
+      setPlaceHolder("Failed to extract license plate from image.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSubmit = () => {
+    if (!licensePlate) {
+      return;
+    }
+
+    router.push(`/vehicle?licensePlate=${licensePlate.replace(" ", "")}`);
+  };
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    // handleUpload();
+    if (!licensePlate) {
+      handleUpload();
+    }
   }, []);
 
   if (loading) {
@@ -89,7 +103,7 @@ const PhotoPreview = ({
         <View style={newStyles.inputWrapper}>
           <TextInput
             style={newStyles.textBox}
-            placeholder="Enter license plate..."
+            placeholder={placeHolder}
             placeholderTextColor="white"
             value={licensePlate}
             onChangeText={setLicensePlate}
@@ -109,7 +123,7 @@ const PhotoPreview = ({
         </View>
 
         <View style={styles.button}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <MaterialIcons name="check" size={30} color="white" />
           </TouchableOpacity>
           <View style={[styles.cornerDash, styles.topLeft]} />

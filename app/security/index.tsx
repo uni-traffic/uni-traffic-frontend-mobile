@@ -1,7 +1,7 @@
-import { View } from "@/components/Themed";
 import SecurityDashboard from "@/components/security/dashboard";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "expo-router";
+import { View } from "react-native";
 import { StyleSheet } from "react-native";
 
 export default function Dashboard() {

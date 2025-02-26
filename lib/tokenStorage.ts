@@ -1,25 +1,25 @@
-import { setItemAsync, getItemAsync, deleteItemAsync } from "expo-secure-store";
+import { deleteItemAsync, getItemAsync, setItemAsync } from "expo-secure-store";
 
-const setToken = async (token: string,): Promise<void> => {
-  await setItemAsync('accessToken', token);
+const setItem = async (key: string, value: string): Promise<void> => {
+  await setItemAsync(key, value);
 };
 
-const getToken = async (): Promise<string | null> => {
+const getItem = async (key: string): Promise<string | null> => {
   try {
-    const token = await getItemAsync('accessToken');
+    const token = await getItemAsync(key);
 
     return token ? token : null;
   } catch {
     return null;
   }
-}
+};
 
-const deleteToken = async () => {
+const deleteItem = async (key: string) => {
   try {
-    await deleteItemAsync('accessToken');
+    await deleteItemAsync(key);
   } catch {
-    console.error('Error deleting token');
+    console.error("Error deleting item");
   }
-}
+};
 
-export { setToken, getToken, deleteToken };
+export { setItem, getItem, deleteItem };

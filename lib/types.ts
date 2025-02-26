@@ -10,11 +10,23 @@ export interface User {
   role: string;
 }
 
+export interface LoginResponse {
+  user: User;
+  appKey: string;
+  accessToken: string;
+}
+
 export interface Vehicle {
   id: string;
   ownerId: string;
-  licenseNumber: string;
+  licensePlate: string;
+  make: string;
+  model: string;
+  series: string;
+  color: string;
+  type: string;
+  images: string[];
   stickerNumber: string;
   isActive: boolean;
-  owner: User
+  owner: User;
 }
