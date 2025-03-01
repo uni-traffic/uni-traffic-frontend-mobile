@@ -42,8 +42,15 @@ const SecurityDashboard = () => {
           <FontAwesome name="shield" size={58} color="white" style={styles.icon} />
           <Text style={styles.headerText}>SECURITY</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/vehicle")}>
-          <ComingSoon />
+        {/* Delete before pushing */}
+        {/*<TouchableOpacity*/}
+        {/*  style={styles.button}*/}
+        {/*  onPress={() => router.push("/vehicle?licensePlate=959CIP")}*/}
+        {/*>*/}
+        {/*  <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />*/}
+        {/*  <Text style={styles.buttonText}>Redirect</Text>*/}
+        {/*</TouchableOpacity>*/}
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/violation")}>
           <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>New Violation</Text>
         </TouchableOpacity>

@@ -30,3 +30,10 @@ export interface Vehicle {
   isActive: boolean;
   owner: User;
 }
+
+export interface Violation {
+  id: string;
+  category: string;
+  violationName: string;
+  penalty: number;
+}
