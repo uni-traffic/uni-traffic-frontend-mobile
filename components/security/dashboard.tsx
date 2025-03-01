@@ -1,12 +1,10 @@
 import { ComingSoon } from "@/components/coming-soon";
 import type { User, Vehicle } from "@/lib/types";
+import { FontAwesome } from "@expo/vector-icons";
 import { faker } from "@faker-js/faker";
 import { format } from "date-fns";
 import { useRouter } from "expo-router";
-import React from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
-
 
 const user: User = {
   id: faker.string.uuid(),
@@ -44,8 +42,15 @@ const SecurityDashboard = () => {
           <FontAwesome name="shield" size={58} color="white" style={styles.icon} />
           <Text style={styles.headerText}>SECURITY</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/violation") }>
-           {/* <ComingSoon />  */}
+        {/* Delete before pushing */}
+        {/*<TouchableOpacity*/}
+        {/*  style={styles.button}*/}
+        {/*  onPress={() => router.push("/vehicle?licensePlate=959CIP")}*/}
+        {/*>*/}
+        {/*  <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />*/}
+        {/*  <Text style={styles.buttonText}>Redirect</Text>*/}
+        {/*</TouchableOpacity>*/}
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/violation")}>
           <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>New Violation</Text>
         </TouchableOpacity>
@@ -81,7 +86,7 @@ const SecurityDashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#eee",  
+    backgroundColor: "#eee",
     width: "100%"
   },
   header: {

@@ -5,18 +5,18 @@ import { VehicleNotFound } from "@/components/vehicle/vehicle-not-found";
 import { VehicleOwner } from "@/components/vehicle/vehicle-owner";
 import { Violation } from "@/components/vehicle/violation";
 import type { Vehicle } from "@/lib/types";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function VehicleInformation() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [vehicle, setVehicle] = useState<Vehicle | undefined>();
 
   const queryParams = useGlobalSearchParams();
-  if (!queryParams.id && !queryParams.licensePlate && !queryParams.stickerNumber) {
-    return <VehicleNotFound />;
-  }
 
   const getVehicle = async () => {
     setLoading(true);
@@ -48,6 +48,10 @@ export default function VehicleInformation() {
     getVehicle();
   }, []);
 
+  if (!queryParams.id && !queryParams.licensePlate && !queryParams.stickerNumber) {
+    return <VehicleNotFound />;
+  }
+
   if (loading) {
     return <Loading />;
   }
@@ -58,6 +62,24 @@ export default function VehicleInformation() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer} style={styles.scrollView}>
+      <View style={styles.headerContainer}>
+        <View style={styles.textContainer}>
+          <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
+        </View>
+        <View style={styles.textContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              router.push(
+                `/violation?licensePlate=${vehicle!.licensePlate}&stickerNumber=${vehicle!.stickerNumber}`
+              )
+            }
+          >
+            <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>New Violation</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={styles.container}>
         <VehicleDetails vehicle={vehicle} />
         <VehicleOwner owner={vehicle.owner} />
@@ -75,11 +97,58 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#EBEAF0"
   },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    alignSelf: "flex-end",
+    marginTop: 10
+  },
+  buttonIcon: {
+    marginRight: 5,
+    paddingLeft: 4
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 16
+  },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#EBEAF0",
     padding: "3%"
+  },
+  titleContainer: {
+    flexDirection: "column",
+    justifyContent: "center"
+  },
+  logo: {
+    height: 60,
+    width: 60
+    // marginLeft: 12
+  },
+  textContainer: {
+    height: "100%",
+    // marginLeft: 12,
+    justifyContent: "center"
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    height: 100,
+    width: "100%",
+    backgroundColor: "black"
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white"
   }
 });
