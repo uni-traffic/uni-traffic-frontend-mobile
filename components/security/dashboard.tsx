@@ -42,7 +42,7 @@ const SecurityDashboard = () => {
           <FontAwesome name="shield" size={58} color="white" style={styles.icon} />
           <Text style={styles.headerText}>SECURITY</Text>
         </View>
-        {/* Delete before pushing */}
+        {/*Delete before pushing*/}
         {/*<TouchableOpacity*/}
         {/*  style={styles.button}*/}
         {/*  onPress={() => router.push("/vehicle?licensePlate=959CIP")}*/}

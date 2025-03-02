@@ -1,60 +1,80 @@
+import api from "@/api/axios";
+import { useAuth } from "@/context/authContext";
+import type { ViolationRecord } from "@/lib/types";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
-import { useState } from "react";
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Modal, Image } from "react-native";
+import type { AxiosError } from "axios";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { FlatList, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ViolationModal from "./violation-details";
 
-interface Violation {
-  id: string;
-  type: string;
-  date: string;
-  fine: string;
-  status: string;
-}
-
-const violations: Violation[] = [
-  { id: "1", type: "Illegal Parking", date: "2025-05-01", fine: "₱ 3,000", status: "Paid" },
-  { id: "2", type: "Reckless Driving", date: "2025-06-10", fine: "₱ 5,000", status: "Unpaid" },
-  { id: "3", type: "Overspeeding", date: "2025-07-15", fine: "₱ 2,500", status: "Unpaid" }
-];
-
 export const UserDashboard = () => {
+  const { user } = useAuth();
   const [isVisible, setIsModalVisible] = useState(false);
-  const [selectedViolation, setSelectedViolation] = useState<Violation | null>(null);;
+  const [selectedViolation, setSelectedViolation] = useState<ViolationRecord | null>(null);
+  const [violationRecords, setViolationRecords] = useState<ViolationRecord[]>([]);
 
-  const violations: Violation[] = [
-    { id: "1", type: "Illegal Parking", date: "2025-05-01", fine: "₱ 3,000", status: "Paid" },
-    { id: "2", type: "Reckless Driving", date: "2025-06-10", fine: "₱ 5,000", status: "Unpaid" },
-    { id: "3", type: "Overspeeding", date: "2025-07-15", fine: "₱ 2,500", status: "Unpaid" }
-  ];
+  const fetchUserViolationRecords = async () => {
+    try {
+      const response = await api.get("/violation-record/search", {
+        params: {
+          userId: user?.id
+        }
+      });
+      if (response.status !== 200 || !response.data) {
+        return;
+      }
 
-  const openModal = (violation: Violation) => {
+      setViolationRecords(response.data as ViolationRecord[]);
+    } catch (err) {
+      const error = err as AxiosError;
+      console.log(error);
+    }
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    fetchUserViolationRecords();
+  }, []);
+
+  const openModal = (violation: ViolationRecord) => {
     setSelectedViolation(violation);
     setIsModalVisible(true);
-  }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
-          <Text style={styles.headerText}>UNITRAFFIC</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.headerText}>UNITRAFFIC</Text>
+          </View>
         </View>
       </View>
 
       <View style={styles.bodyContainer}>
         <View style={styles.box}>
-          <FontAwesome6 style={styles.icon} name="peso-sign" size={24} color="black" />
-          <View>
-            <Text style={styles.label}>Total Fine</Text>
-            <Text style={styles.text}>4,000</Text>
+          <View style={styles.card}>
+            <FontAwesome6 style={styles.icon} name="peso-sign" size={24} color="black" />
+            <View>
+              <Text style={styles.label}>Total Fine</Text>
+              <Text style={styles.text}>
+                {violationRecords
+                  ? violationRecords.reduce((prev, next) => prev + next.violation?.penalty!, 0)
+                  : "0.00"}
+              </Text>
+            </View>
           </View>
         </View>
 
         <View style={styles.box}>
-          <AntDesign style={styles.icon} name="exclamationcircleo" size={24} color="black" />
-          <View>
-            <Text style={styles.label}>Violations</Text>
-            <Text style={styles.text}>{violations.length}</Text>
+          <View style={styles.card}>
+            <AntDesign style={styles.icon} name="exclamationcircleo" size={24} color="black" />
+            <View>
+              <Text style={styles.label}>Violations</Text>
+              <Text style={styles.text}>{violationRecords.length}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -62,19 +82,24 @@ export const UserDashboard = () => {
       <View style={styles.violationContainer}>
         <View style={styles.violationBox}>
           <FlatList
-            data={violations}
+            data={violationRecords}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => openModal(item)}>
                 <View style={styles.violationIcon}>
                   <AntDesign style={styles.icon} name="exclamationcircleo" size={24} color="red" />
                   <View style={styles.violationInfo}>
-                    <Text style={styles.violation}>{item.type}</Text>
-                    <Text style={styles.label}>{item.date}</Text>
+                    <Text style={styles.violation}>{item.violation!.violationName}</Text>
+                    <Text style={styles.label}>
+                      {format(new Date(item.date).toString(), "MMMM dd yyyy")}
+                    </Text>
                   </View>
                   <View>
-                    <Text style={styles.fine}>{item.fine}</Text>
-                    <Text style={item.status === "Paid" ? styles.textPaid : styles.textUnpaid}>
+                    <Text style={styles.fine}>
+                      {"₱ "}
+                      {item.violation!.penalty}
+                    </Text>
+                    <Text style={item.status === "PAID" ? styles.textPaid : styles.textUnpaid}>
                       {item.status}
                     </Text>
                   </View>
@@ -88,7 +113,10 @@ export const UserDashboard = () => {
             onRequestClose={() => setIsModalVisible(false)}
             animationType="fade"
           >
-            <ViolationModal visible={isVisible} closeModal={() => setIsModalVisible(false)} violation={selectedViolation} />
+            <ViolationModal
+              closeModal={() => setIsModalVisible(false)}
+              violation={selectedViolation!}
+            />
           </Modal>
         </View>
       </View>
@@ -102,12 +130,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
     width: "100%"
   },
+  textContainer: {
+    justifyContent: "center"
+  },
   bodyContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 5,
     padding: 10
+  },
+  card: {
+    alignItems: "center",
+    flexDirection: "row"
   },
   violationContainer: {
     backgroundColor: "white",
@@ -147,28 +182,31 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderWidth: 1,
     borderColor: "#ddd",
-    padding: 10
+    paddingVertical: 10,
+    paddingHorizontal: 15
   },
   box: {
-    flexDirection: "row",
-    padding: 10,
     backgroundColor: "white",
     alignItems: "center",
-    width: 180,
-    height: 80,
+    justifyContent: "center",
+    width: "45%",
+    height: 75,
     borderRadius: 10,
-    margin: 5
+    marginHorizontal: 5,
+    marginTop: 10
   },
   fine: {
     fontSize: 15,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    textAlign: "center"
   },
   text: {
     fontSize: 18
   },
   label: {
     fontSize: 10,
-    fontWeight: "medium"
+    fontWeight: "medium",
+    marginTop: 3
   },
   header: {
     backgroundColor: "black",
@@ -182,8 +220,8 @@ const styles = StyleSheet.create({
     borderColor: "white"
   },
   icon: {
-    marginRight: 15,
-    marginLeft: 20
+    marginRight: 15
+    // marginLeft: 20
   },
   headerText: {
     color: "white",
@@ -197,7 +235,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center",
+    textAlignVertical: "center",
     fontSize: 12,
+    height: 20,
+    width: 50
   },
   textUnpaid: {
     backgroundColor: "#FB2727",
@@ -206,7 +247,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center",
+    textAlignVertical: "center",
     fontSize: 12,
+    height: 20,
+    width: 50
   },
   logo: {
     height: 60,

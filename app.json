@@ -4,12 +4,12 @@
     "slug": "UniTraffic",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/neu-logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/neu-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,7 +28,10 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-secure-store"],
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -37,7 +40,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8a777e28-2743-4839-8916-cb8e070f49b2"
+        "projectId": "63258b6e-02a2-4485-9d97-798374bd8115"
       }
     }
   }

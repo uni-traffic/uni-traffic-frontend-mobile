@@ -1,13 +1,14 @@
 import api from "@/api/axios";
-import { deleteItem, setItem } from "@/lib/tokenStorage";
+import { deleteItem, getItem, setItem } from "@/lib/tokenStorage";
 import type { LoginResponse, User } from "@/lib/types";
 import type { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
 import type React from "react";
+import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
-  user: { role: string } | null;
+  user: User | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   error: string | null;
@@ -21,6 +22,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const getLoggedInUser = async () => {
+    const token = await getItem("AUTH_TOKEN");
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response: AxiosResponse = await api.get("/user/me");
+
+      if (response.status !== 200) {
+        return;
+      }
+
+      setUser(response.data);
+
+      if (response.data.role === "SECURITY") {
+        router.replace("/security");
+        return;
+      }
+
+      router.replace("/(user)");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const login = async (username: string, password: string) => {
     setError(null);
@@ -75,6 +102,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     router.replace("/auth/login");
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    getLoggedInUser();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, error, isLoading }}>

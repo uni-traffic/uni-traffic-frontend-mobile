@@ -4,8 +4,9 @@ import { VehicleDetails } from "@/components/vehicle/vehicle-details";
 import { VehicleNotFound } from "@/components/vehicle/vehicle-not-found";
 import { VehicleOwner } from "@/components/vehicle/vehicle-owner";
 import { Violation } from "@/components/vehicle/violation";
-import type { Vehicle } from "@/lib/types";
+import type { Vehicle, ViolationRecord } from "@/lib/types";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import type { AxiosError } from "axios";
 import { useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ export default function VehicleInformation() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [vehicle, setVehicle] = useState<Vehicle | undefined>();
+  const [violationHistory, setViolationHistory] = useState<ViolationRecord[]>([]);
 
   const queryParams = useGlobalSearchParams();
 
@@ -34,8 +36,7 @@ export default function VehicleInformation() {
         return;
       }
 
-      const vehicleData: Vehicle = response.data;
-      setVehicle(vehicleData);
+      setVehicle(response.data as Vehicle);
     } catch {
       setVehicle(undefined);
     } finally {
@@ -47,6 +48,34 @@ export default function VehicleInformation() {
   useEffect(() => {
     getVehicle();
   }, []);
+
+  useEffect(() => {
+    const fetchVehicleViolation = async () => {
+      if (!vehicle?.licensePlate) {
+        return;
+      }
+
+      try {
+        const response = await api.get("/violation-record/search", {
+          params: {
+            vehicleId: vehicle?.id
+          }
+        });
+        if (response.status !== 200 || response.data.length === 0) {
+          console.error("Unknown response");
+          return;
+        }
+
+        setViolationHistory(response.data as ViolationRecord[]);
+      } catch (err) {
+        const error = err as AxiosError;
+
+        console.log(error.response?.data);
+      }
+    };
+
+    fetchVehicleViolation();
+  }, [vehicle]);
 
   if (!queryParams.id && !queryParams.licensePlate && !queryParams.stickerNumber) {
     return <VehicleNotFound />;
@@ -83,7 +112,7 @@ export default function VehicleInformation() {
       <View style={styles.container}>
         <VehicleDetails vehicle={vehicle} />
         <VehicleOwner owner={vehicle.owner} />
-        <Violation />
+        <Violation violations={violationHistory} />
       </View>
     </ScrollView>
   );

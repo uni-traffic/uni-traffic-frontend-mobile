@@ -37,3 +37,18 @@ export interface Violation {
   violationName: string;
   penalty: number;
 }
+
+export interface ViolationRecord {
+  id: string;
+  userId: string;
+  reportedById: string;
+  violationId: string;
+  vehicleId: string;
+  status: string;
+  remarks: string;
+  date: string;
+  user: User | null;
+  reporter: User | null;
+  violation: Violation | null;
+  vehicle: Vehicle | null;
+}

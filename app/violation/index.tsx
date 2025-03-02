@@ -1,5 +1,7 @@
+import api from "@/api/axios";
 import ViolationSelect from "@/components/security/violation-select";
 import { useAuth } from "@/context/authContext";
+import type { AxiosError, AxiosResponse } from "axios";
 import { useNavigation, useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { defaultTo } from "rambda";
@@ -16,7 +18,7 @@ export default function Violation() {
     defaultTo("", queryParams.stickerNumber as string)
   );
   const [violation, setViolation] = useState("");
-  const [details, setDetails] = useState(" ");
+  const [remarks, setRemarks] = useState("");
 
   const { user } = useAuth();
   const navigation = useNavigation();
@@ -26,7 +28,7 @@ export default function Violation() {
     router.replace("/(user)");
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!stickerNumber && !licensePlate) {
       alert("License Plate or Sticker Number must be provided.");
       return;
@@ -37,8 +39,30 @@ export default function Violation() {
       return;
     }
 
-    alert("Violation Submitted");
-    // navigation.goBack();
+    if (remarks.trim().length > 140) {
+      alert("Remarks is limited to 140 characters long");
+      return;
+    }
+
+    try {
+      const response: AxiosResponse = await api.post("/violation-record/create", {
+        vehicleId: queryParams.vehicleId,
+        licensePlate: licensePlate ? licensePlate.replace(" ", "") : undefined,
+        stickerNumber: stickerNumber,
+        violationId: violation,
+        remarks: remarks
+      });
+
+      if (response.status === 201) {
+        alert("Violation Submitted");
+        navigation.goBack();
+      }
+    } catch (err) {
+      const error = err as AxiosError;
+      const errorMessage = (error.response?.data as { message: string }).message;
+
+      alert(`Error occurred submitting violation:\n${errorMessage}`);
+    }
   };
 
   const handleCancel = () => {
@@ -89,15 +113,16 @@ export default function Violation() {
           </View>
 
           <View style={styles.container}>
-            <Text style={styles.label}>Remarks</Text>
+            <Text style={styles.label}>Remarks (Optional)</Text>
             <View style={styles.box}>
               <TextInput
                 style={[styles.input, styles.multilineText]}
                 placeholder="Type here.."
                 multiline={true}
+                maxLength={140}
                 onSubmitEditing={Keyboard.dismiss}
                 returnKeyType="done"
-                onChangeText={setDetails}
+                onChangeText={setRemarks}
               />
             </View>
           </View>
@@ -207,7 +232,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 100,
     backgroundColor: "black",
-    paddingLeft: 10,
+    paddingLeft: 15,
     paddingHorizontal: 5
   }
 });

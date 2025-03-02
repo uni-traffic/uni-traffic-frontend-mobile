@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import type { ViolationRecord } from "@/lib/types";
+import { format } from "date-fns";
+import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export const Violation = () => {
-  const [violations, setViolations] = useState<
-    { id: number; type: string; date: string; status: string }[]
-  >([]);
-
+export const Violation = ({ violations }: { violations: ViolationRecord[] }) => {
   return (
     <>
       {/* Violation details */}
@@ -35,14 +33,16 @@ export const Violation = () => {
             .map((violation) => (
               <React.Fragment key={violation.id}>
                 <View style={styles.containerInfoBody}>
-                  <View>
-                    <Text style={styles.titleBody}>{violation.type}</Text>
-                    <Text style={styles.textDate}>{violation.date}</Text>
+                  <View style={styles.containerRow}>
+                    <Text style={styles.titleBody}>{violation.violation?.violationName}</Text>
+                    <Text style={styles.textDate}>
+                      {format(new Date(violation.date).toString(), "MMMM dd yyyy")}
+                    </Text>
                   </View>
                   <View>
                     <Text
                       style={[
-                        violation.status === "pending" ? styles.textPending : styles.textResolved
+                        violation.status === "UNPAID" ? styles.textPending : styles.textResolved
                       ]}
                     >
                       {violation.status}
@@ -80,6 +80,10 @@ const styles = StyleSheet.create({
     margin: "2%",
     padding: "3%",
     borderRadius: 10
+  },
+  containerRow: {
+    width: "80%",
+    height: "100%"
   },
   containerInfoContent: {
     backgroundColor: "transparent",
@@ -139,24 +143,26 @@ const styles = StyleSheet.create({
     margin: 20
   },
   textPending: {
-    backgroundColor: "#D99C0B",
+    backgroundColor: "#FB2727",
     fontFamily: "ROBOTO-MEDIUM",
     color: "white",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    padding: 4,
     borderRadius: 10,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 12,
+    width: 50
   },
   textResolved: {
     backgroundColor: "#03CD09",
     fontFamily: "ROBOTO-MEDIUM",
     color: "white",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    padding: 4,
     borderRadius: 10,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    fontSize: 12,
+    width: 50
   },
   textDate: {
     fontFamily: "Roboto",
