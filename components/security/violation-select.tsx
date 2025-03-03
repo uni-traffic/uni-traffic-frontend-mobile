@@ -1,42 +1,35 @@
+import api from "@/api/axios";
 import type { Violation } from "@/lib/types";
-import type { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-const data: Violation[] = [
-  {
-    id: "1",
-    category: "A",
-    violationName: "Illegal Parking",
-    penalty: 500
-  },
-  {
-    id: "2",
-    category: "A",
-    violationName: "Counter Flow",
-    penalty: 500
-  },
-  {
-    id: "3",
-    category: "A",
-    violationName: "Overloading",
-    penalty: 500
-  },
-  {
-    id: "4",
-    category: "A",
-    violationName: "parking at the reserved areas",
-    penalty: 500
-  },
-  {
-    id: "5",
-    category: "A",
-    violationName: "driving without VVP or VPS",
-    penalty: 500
-  }
-];
-
 const ViolationSelect = ({ setViolation }: { setViolation: Dispatch<SetStateAction<string>> }) => {
+  const [loading, setLoading] = useState(false);
+  const [violationList, setViolationList] = useState<Violation[]>([]);
+
+  const fetchViolationList = async () => {
+    try {
+      setLoading(true);
+
+      const response = await api.get("/violation");
+      if (response.status !== 200 || !response.data) {
+        return;
+      }
+
+      setViolationList(response.data as Violation[]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    fetchViolationList();
+  }, []);
+
   return (
     <Dropdown
       style={styles.dropdown}
@@ -44,13 +37,13 @@ const ViolationSelect = ({ setViolation }: { setViolation: Dispatch<SetStateActi
       placeholderStyle={styles.placeholderStyle}
       iconStyle={styles.iconStyle}
       maxHeight={400}
-      data={data}
+      data={violationList}
       valueField="id"
       labelField="violationName"
       search
       placeholder="Select Violation"
       onChange={(e) => {
-        setViolation(e.value);
+        setViolation(e.id);
       }}
     />
   );

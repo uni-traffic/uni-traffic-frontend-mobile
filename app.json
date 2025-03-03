@@ -4,12 +4,12 @@
     "slug": "UniTraffic",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/neu-logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/neu-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/neu-logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.unitraffic.mobie"
@@ -26,7 +26,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/neu-logo.png"
     },
     "plugins": ["expo-router", "expo-secure-store"],
     "experiments": {
@@ -37,7 +37,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8a777e28-2743-4839-8916-cb8e070f49b2"
+        "projectId": "63258b6e-02a2-4485-9d97-798374bd8115"
       }
     }
   }
