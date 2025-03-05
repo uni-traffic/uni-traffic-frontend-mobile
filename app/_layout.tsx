@@ -4,7 +4,6 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import { AuthProvider } from "@/context/authContext";
@@ -51,7 +50,7 @@ function RootLayoutNav() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="auth" options={{ headerShown: false }} />
           <Stack.Screen name="security" options={{ headerShown: false }} />
-          <Stack.Screen name="violation" options={{ headerShown: false }} /> 
+          <Stack.Screen name="violation" options={{ headerShown: false }} />
           <Stack.Screen name="vehicle" options={{ headerShown: false }} />
           <Stack.Screen name="(user)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
