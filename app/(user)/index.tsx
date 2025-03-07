@@ -16,7 +16,9 @@ export default function Dashboard() {
   return (
     <View style={styles.container}>
       {user?.role === "ADMIN" && <AdminDashboard />}
-      {(user?.role === "STUDENT" || user?.role === "STAFF") && <UserDashboard />}
+      {(user?.role === "STUDENT" || user?.role === "STAFF" || user?.role === "GUEST") && (
+        <UserDashboard />
+      )}
     </View>
   );
 }

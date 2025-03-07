@@ -7,7 +7,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, error } = useAuth();
+  const { login, signInWithGoogle, error } = useAuth();
   const handleLogin = async () => {
     await login(username, password);
   };
@@ -28,7 +28,10 @@ export default function Login() {
             />
           </View>
           <View style={newStyles.formGoogleButtonContainer}>
-            <TouchableOpacity style={newStyles.signInWithGoogleButton}>
+            <TouchableOpacity
+              style={newStyles.signInWithGoogleButton}
+              onPress={() => signInWithGoogle()}
+            >
               <Image
                 style={newStyles.googleLogo}
                 source={require("../../assets/images/google-icon.png")}

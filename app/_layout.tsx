@@ -49,6 +49,7 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="auth" options={{ headerShown: false }} />
+          <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
           <Stack.Screen name="security" options={{ headerShown: false }} />
           <Stack.Screen name="violation" options={{ headerShown: false }} />
           <Stack.Screen name="vehicle" options={{ headerShown: false }} />

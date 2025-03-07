@@ -2,7 +2,9 @@ import api from "@/api/axios";
 import { deleteItem, getItem, setItem } from "@/lib/tokenStorage";
 import type { LoginResponse, User } from "@/lib/types";
 import type { AxiosError, AxiosResponse } from "axios";
+import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import type React from "react";
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
@@ -10,10 +12,13 @@ import { createContext, useContext, useState } from "react";
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   error: string | null;
   isLoading: boolean;
 }
+
+WebBrowser.maybeCompleteAuthSession();
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -22,6 +27,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: "606711045148-tcqcgtseatmv2a25o8eaf2blupcgdra3.apps.googleusercontent.com"
+  });
 
   const getLoggedInUser = async () => {
     const token = await getItem("AUTH_TOKEN");
@@ -46,6 +54,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       router.replace("/(user)");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    await promptAsync();
+  };
+
+  const verifyGoogleSignIn = async (token: string) => {
+    setIsLoading(true);
+    try {
+      const response: AxiosResponse = await api.post("/auth/google", {
+        token: token,
+        clientType: "MOBILE"
+      });
+      if (response.status !== 200) return;
+
+      const { user, accessToken, appKey }: LoginResponse = response.data;
+
+      setUser(user);
+      await setItem("AUTH_TOKEN", accessToken);
+      await setItem("RECOGNIZER_TOKEN", appKey);
+
+      if (user.role === "SECURITY") {
+        router.replace("/security");
+        return;
+      }
+
+      router.replace("/(user)");
+    } catch (err) {
+      const error = err as AxiosError;
+
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -108,8 +150,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     getLoggedInUser();
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (response?.type === "success") {
+      console.log(request);
+      const { authentication } = response;
+
+      verifyGoogleSignIn(authentication?.idToken!);
+    }
+  }, [response]);
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, error, isLoading }}>
+    <AuthContext.Provider value={{ user, login, signInWithGoogle, logout, error, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
