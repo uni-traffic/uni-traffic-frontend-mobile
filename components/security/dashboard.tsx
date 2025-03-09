@@ -4,7 +4,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { faker } from "@faker-js/faker";
 import { format } from "date-fns";
 import { useRouter } from "expo-router";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useState } from "react";
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const user: User = {
   id: faker.string.uuid(),
@@ -34,6 +35,11 @@ const scannedVehicles: Vehicle[] = Array.from({ length: 6 }, vehicle);
 
 const SecurityDashboard = () => {
   const router = useRouter();
+  const [licensePlate, setLicensePlate] = useState("");
+
+  const handleSearchSubmit = () => {
+    router.push(`/vehicle?licensePlate=${licensePlate.replace(" ", "").toLowerCase()}`);
+  };
 
   return (
     <View style={styles.container}>
@@ -42,18 +48,21 @@ const SecurityDashboard = () => {
           <FontAwesome name="shield" size={58} color="white" style={styles.icon} />
           <Text style={styles.headerText}>SECURITY</Text>
         </View>
-        {/*Delete before pushing*/}
-        {/*<TouchableOpacity*/}
-        {/*  style={styles.button}*/}
-        {/*  onPress={() => router.push("/vehicle?licensePlate=959CIP")}*/}
-        {/*>*/}
-        {/*  <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />*/}
-        {/*  <Text style={styles.buttonText}>Redirect</Text>*/}
-        {/*</TouchableOpacity>*/}
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/violation")}>
-          <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>New Violation</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TextInput
+            placeholder="Search License Plate"
+            style={styles.headerSearch}
+            onChangeText={setLicensePlate}
+            onSubmitEditing={handleSearchSubmit}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleSearchSubmit}>
+            <FontAwesome name="search" size={16} color="black" style={styles.buttonIcon} />
+          </TouchableOpacity>
+          {/*<TouchableOpacity style={styles.button} onPress={() => router.push("/violation")}>*/}
+          {/*  <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />*/}
+          {/*  <Text style={styles.buttonText}>New Violation</Text>*/}
+          {/*</TouchableOpacity>*/}
+        </View>
       </View>
       <View style={styles.recentlyScannedVehicle}>
         <ComingSoon />
@@ -92,16 +101,32 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "black",
     width: "100%",
-    paddingHorizontal: 20,
-    paddingVertical: 20
+    padding: 20
+  },
+  headerSearch: {
+    width: "60%",
+    height: 40,
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: "white",
+    paddingLeft: 10,
+    textAlign: "left"
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end"
   },
   titleContainer: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10
   },
   icon: {
-    marginRight: 30,
-    marginLeft: 20
+    marginRight: 30
   },
   headerText: {
     color: "white",
@@ -114,11 +139,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 8,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "black",
-    alignSelf: "flex-end",
-    marginTop: 10
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "black"
   },
   buttonIcon: {
     marginRight: 5,

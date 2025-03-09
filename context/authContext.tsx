@@ -6,6 +6,7 @@ import * as Google from "expo-auth-session/providers/google";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import type React from "react";
+import { useCallback } from "react";
 import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 
@@ -31,7 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     androidClientId: "606711045148-tcqcgtseatmv2a25o8eaf2blupcgdra3.apps.googleusercontent.com"
   });
 
-  const getLoggedInUser = async () => {
+  const getLoggedInUser = useCallback(async () => {
     const token = await getItem("AUTH_TOKEN");
     if (!token) {
       return;
@@ -55,13 +56,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [router]);
 
   const signInWithGoogle = async () => {
     await promptAsync();
   };
 
   const verifyGoogleSignIn = async (token: string) => {
+    setError(null);
     setIsLoading(true);
     try {
       const response: AxiosResponse = await api.post("/auth/google", {
@@ -85,7 +87,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (err) {
       const error = err as AxiosError;
 
-      console.log(error.message);
+      console.log(error.response?.data);
+      setError("Internal Server Error: ");
     } finally {
       setIsLoading(false);
     }
@@ -141,14 +144,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await deleteItem("AUTH_TOKEN");
     await deleteItem("RECOGNIZER_TOKEN");
     setUser(null);
+    setError(null);
 
     router.replace("/auth/login");
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     getLoggedInUser();
-  }, []);
+  }, [getLoggedInUser]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

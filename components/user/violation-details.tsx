@@ -100,26 +100,22 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   bodyContainer: {
-    flex: 1,
     width: "100%",
     justifyContent: "space-between"
   },
   header: {
     flexDirection: "row",
     width: "100%",
-    height: "8%",
     paddingHorizontal: 20,
     justifyContent: "space-between"
   },
   buttonContainer: {
-    height: "5%",
-    paddingBottom: 20,
+    marginTop: 20,
     width: "100%",
     alignItems: "center"
   },
   modalContainer: {
     width: "90%",
-    height: "80%",
     backgroundColor: "#EBEAF0",
     borderRadius: 10,
     paddingHorizontal: 20,
@@ -143,26 +139,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#03CD09",
     fontFamily: "ROBOTO-MEDIUM",
     color: "white",
-    padding: 4,
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 12,
-    width: 50
+    paddingVertical: 2,
+    paddingHorizontal: 10
   },
   textUnpaid: {
     backgroundColor: "#FB2727",
     fontFamily: "ROBOTO-MEDIUM",
     color: "white",
-    padding: 4,
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 12,
-    width: 50
+    paddingVertical: 2,
+    paddingHorizontal: 5
   },
   textContainer: {
-    height: "100%",
+    // height: "100%",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -189,11 +185,11 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 30,
-    width: "40%",
+    width: "50%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#20201F",
-    borderRadius: 8
+    borderRadius: 12
   },
   buttonText: {
     color: "#fff",
