@@ -55,7 +55,7 @@ export default function Violation() {
 
       if (response.status === 201) {
         alert("Violation Submitted");
-        navigation.goBack();
+        router.replace(`/vehicle?stickerNumber=${stickerNumber}`);
       }
     } catch (err) {
       const error = err as AxiosError;

@@ -150,19 +150,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 12,
-    width: 50
+    fontSize: 12
   },
   textResolved: {
     backgroundColor: "#03CD09",
     fontFamily: "ROBOTO-MEDIUM",
     color: "white",
-    padding: 4,
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 12,
-    width: 50
+    paddingVertical: 3,
+    paddingHorizontal: 10
   },
   textDate: {
     fontFamily: "Roboto",

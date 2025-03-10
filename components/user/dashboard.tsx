@@ -5,7 +5,16 @@ import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import type { AxiosError } from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { FlatList, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import ViolationModal from "./violation-details";
 
 export const UserDashboard = () => {
@@ -43,7 +52,7 @@ export const UserDashboard = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
@@ -120,7 +129,7 @@ export const UserDashboard = () => {
           </Modal>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -157,8 +166,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 100,
     minHeight: 60
   },
   violationInfo: {
@@ -167,7 +175,9 @@ const styles = StyleSheet.create({
   },
   violation: {
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    textAlign: "left",
+    paddingRight: 5
   },
   violationBox: {
     alignContent: "center",
@@ -193,7 +203,12 @@ const styles = StyleSheet.create({
     height: 75,
     borderRadius: 10,
     marginHorizontal: 5,
-    marginTop: 10
+    marginTop: 10,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2
   },
   fine: {
     fontSize: 15,
@@ -221,7 +236,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 15
-    // marginLeft: 20
   },
   headerText: {
     color: "white",
@@ -237,8 +251,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textAlignVertical: "center",
     fontSize: 12,
-    height: 20,
-    width: 50
+    paddingHorizontal: 10,
+    paddingVertical: 2
   },
   textUnpaid: {
     backgroundColor: "#FB2727",
@@ -249,8 +263,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textAlignVertical: "center",
     fontSize: 12,
-    height: 20,
-    width: 50
+    paddingHorizontal: 5,
+    paddingVertical: 2
   },
   logo: {
     height: 60,

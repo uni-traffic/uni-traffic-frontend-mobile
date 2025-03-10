@@ -15,16 +15,17 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      {user?.role === "ADMIN" && <AdminDashboard />}
-      {(user?.role === "STUDENT" || user?.role === "STAFF") && <UserDashboard />}
+      {user?.role === "ADMIN" || user?.role === "SUPERADMIN" ? (
+        <AdminDashboard />
+      ) : (
+        <UserDashboard />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    flex: 1
   }
 });

@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/neu-logo.png",
+        "foregroundImage": "./assets/images/neu-logo-small.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.unitraffic.mobie"
