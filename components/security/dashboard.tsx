@@ -58,10 +58,6 @@ const SecurityDashboard = () => {
           <TouchableOpacity style={styles.button} onPress={handleSearchSubmit}>
             <FontAwesome name="search" size={16} color="black" style={styles.buttonIcon} />
           </TouchableOpacity>
-          {/*<TouchableOpacity style={styles.button} onPress={() => router.push("/violation")}>*/}
-          {/*  <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />*/}
-          {/*  <Text style={styles.buttonText}>New Violation</Text>*/}
-          {/*</TouchableOpacity>*/}
         </View>
       </View>
       <View style={styles.recentlyScannedVehicle}>
