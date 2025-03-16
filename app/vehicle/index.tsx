@@ -9,18 +9,27 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import type { AxiosError } from "axios";
 import { useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
-import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 
 export default function VehicleInformation() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [vehicle, setVehicle] = useState<Vehicle | undefined>();
   const [violationHistory, setViolationHistory] = useState<ViolationRecord[]>([]);
+  const [refreshing, setRefreshing] = useState(false); // Add state for refresh
 
   const queryParams = useGlobalSearchParams();
 
-  const getVehicle = async () => {
+  const getVehicle = useCallback(async () => {
     setLoading(true);
 
     try {
@@ -42,40 +51,46 @@ export default function VehicleInformation() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [queryParams.id, queryParams.licensePlate, queryParams.stickerNumber]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    getVehicle();
-  }, []);
+  const fetchVehicleViolation = useCallback(async () => {
+    if (!vehicle?.licensePlate) {
+      return;
+    }
 
-  useEffect(() => {
-    const fetchVehicleViolation = async () => {
-      if (!vehicle?.licensePlate) {
+    try {
+      const response = await api.get("/violation-record/search", {
+        params: {
+          vehicleId: vehicle?.id
+        }
+      });
+      if (response.status !== 200 || response.data.length === 0) {
+        console.error("Unknown response");
         return;
       }
 
-      try {
-        const response = await api.get("/violation-record/search", {
-          params: {
-            vehicleId: vehicle?.id
-          }
-        });
-        if (response.status !== 200 || response.data.length === 0) {
-          console.error("Unknown response");
-          return;
-        }
+      setViolationHistory(response.data as ViolationRecord[]);
+    } catch (err) {
+      const error = err as AxiosError;
+      console.log(error.response?.data);
+    }
+  }, [vehicle?.id, vehicle?.licensePlate]);
 
-        setViolationHistory(response.data as ViolationRecord[]);
-      } catch (err) {
-        const error = err as AxiosError;
+  useEffect(() => {
+    getVehicle();
+  }, [getVehicle]);
 
-        console.log(error.response?.data);
-      }
-    };
+  useEffect(() => {
+    if (vehicle) {
+      fetchVehicleViolation();
+    }
+  }, [vehicle, fetchVehicleViolation]);
 
-    fetchVehicleViolation();
-  }, [vehicle]);
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    getVehicle();
+    fetchVehicleViolation().finally(() => setRefreshing(false));
+  }, [fetchVehicleViolation, getVehicle]);
 
   if (!queryParams.id && !queryParams.licensePlate && !queryParams.stickerNumber) {
     return <VehicleNotFound />;
@@ -90,7 +105,11 @@ export default function VehicleInformation() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer} style={styles.scrollView}>
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      style={styles.scrollView}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+    >
       <View style={styles.headerContainer}>
         <View style={styles.textContainer}>
           <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
@@ -111,7 +130,7 @@ export default function VehicleInformation() {
       </View>
       <View style={styles.container}>
         <VehicleDetails vehicle={vehicle} />
-        <VehicleOwner owner={vehicle.owner} />
+        <VehicleOwner owner={vehicle.owner!} />
         <Violation violations={violationHistory} />
       </View>
     </ScrollView>

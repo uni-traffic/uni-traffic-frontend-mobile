@@ -4,11 +4,12 @@ import type { ViolationRecord } from "@/lib/types";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import type { AxiosError } from "axios";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   Modal,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -22,8 +23,9 @@ export const UserDashboard = () => {
   const [isVisible, setIsModalVisible] = useState(false);
   const [selectedViolation, setSelectedViolation] = useState<ViolationRecord | null>(null);
   const [violationRecords, setViolationRecords] = useState<ViolationRecord[]>([]);
+  const [refreshing, setRefreshing] = useState(false); // Track the refreshing state
 
-  const fetchUserViolationRecords = async () => {
+  const fetchUserViolationRecords = useCallback(async () => {
     try {
       const response = await api.get("/violation-record/search", {
         params: {
@@ -39,12 +41,16 @@ export const UserDashboard = () => {
       const error = err as AxiosError;
       console.log(error);
     }
-  };
+  }, [user?.id]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchUserViolationRecords().finally(() => setRefreshing(false));
+  }, [fetchUserViolationRecords]);
+
   useEffect(() => {
     fetchUserViolationRecords();
-  }, []);
+  }, [fetchUserViolationRecords]);
 
   const openModal = (violation: ViolationRecord) => {
     setSelectedViolation(violation);
@@ -115,6 +121,7 @@ export const UserDashboard = () => {
                 </View>
               </TouchableOpacity>
             )}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
           />
           <Modal
             transparent={true}

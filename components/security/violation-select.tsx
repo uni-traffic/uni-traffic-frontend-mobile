@@ -1,6 +1,6 @@
 import api from "@/api/axios";
 import type { Violation } from "@/lib/types";
-import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -8,7 +8,7 @@ const ViolationSelect = ({ setViolation }: { setViolation: Dispatch<SetStateActi
   const [loading, setLoading] = useState(false);
   const [violationList, setViolationList] = useState<Violation[]>([]);
 
-  const fetchViolationList = async () => {
+  const fetchViolationList = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -23,12 +23,11 @@ const ViolationSelect = ({ setViolation }: { setViolation: Dispatch<SetStateActi
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchViolationList();
-  }, []);
+  }, [fetchViolationList]);
 
   return (
     <Dropdown

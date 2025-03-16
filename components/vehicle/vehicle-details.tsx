@@ -13,8 +13,10 @@ export const VehicleDetails = ({ vehicle }: { vehicle: Vehicle }) => {
             <Text style={styles.title}>Vehicle Details</Text>
           </View>
           <View style={styles.containerInfoContent}>
-            <Text style={[vehicle.isActive ? styles.textActive : styles.textInactive]}>
-              {vehicle.isActive ? "Active" : "Inactive"}
+            <Text
+              style={[vehicle.status === "REGISTERED" ? styles.textActive : styles.textInactive]}
+            >
+              {vehicle.status}
             </Text>
           </View>
         </View>

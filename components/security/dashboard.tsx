@@ -27,7 +27,7 @@ const vehicle = (): Vehicle => ({
   type: faker.helpers.arrayElement(["CAR", "MOTORCYCLE"]),
   images: [faker.image.url(), faker.image.url(), faker.image.url()],
   stickerNumber: "12345678",
-  isActive: faker.datatype.boolean(),
+  status: faker.helpers.arrayElement(["REGISTERED", "PENDING"]),
   owner: user
 });
 
