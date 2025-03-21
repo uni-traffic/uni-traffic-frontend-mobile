@@ -16,6 +16,7 @@ import {
   View
 } from "react-native";
 import ViolationModal from "./violation-details";
+import { router } from "expo-router";
 
 export const UserDashboard = () => {
   const { user } = useAuth();
@@ -60,6 +61,10 @@ export const UserDashboard = () => {
             <Text style={styles.headerText}>UNITRAFFIC</Text>
           </View>
         </View>
+        <TouchableOpacity style={styles.button} onPress={() => router.push("/register")}>
+            <AntDesign style={styles.buttonIcon} name="form" size={22} color="black" />
+             <Text style={styles.buttonText}>Register Vehicle</Text> 
+            </TouchableOpacity>     
       </View>
 
       <View style={styles.bodyContainer}>
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   textContainer: {
-    justifyContent: "center"
+    justifyContent: "center",
   },
   bodyContainer: {
     flexDirection: "row",
@@ -216,7 +221,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   text: {
-    fontSize: 18
+    fontSize: 18,
   },
   label: {
     fontSize: 10,
@@ -227,12 +232,11 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     width: "100%",
     paddingHorizontal: 20,
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   titleContainer: {
     flexDirection: "row",
     alignSelf: "center",
-    borderColor: "white"
   },
   icon: {
     marginRight: 15
@@ -271,5 +275,25 @@ const styles = StyleSheet.create({
     width: 60,
     marginRight: 20,
     alignSelf: "center"
-  }
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 16
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    alignSelf: "flex-end",
+    marginTop: 10
+  },
+  buttonIcon: {
+    marginRight: 5,
+    paddingLeft: 4
+  },
 });
