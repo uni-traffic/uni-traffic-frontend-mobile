@@ -60,6 +60,10 @@ export const UserDashboard = () => {
             <Text style={styles.headerText}>UNITRAFFIC</Text>
           </View>
         </View>
+        {/*<TouchableOpacity style={styles.button} onPress={() => router.push("/register")}>*/}
+        {/*  <AntDesign style={styles.buttonIcon} name="form" size={22} color="black" />*/}
+        {/*  <Text style={styles.buttonText}>Apply for Vehicle Sticker</Text>*/}
+        {/*</TouchableOpacity>*/}
       </View>
 
       <View style={styles.bodyContainer}>
@@ -88,47 +92,54 @@ export const UserDashboard = () => {
         </View>
       </View>
 
-      <View style={styles.violationContainer}>
-        <View style={styles.violationBox}>
-          <FlatList
-            data={violationRecords}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => openModal(item)}>
-                <View style={styles.violationIcon}>
-                  <AntDesign style={styles.icon} name="exclamationcircleo" size={24} color="red" />
-                  <View style={styles.violationInfo}>
-                    <Text style={styles.violation}>{item.violation!.violationName}</Text>
-                    <Text style={styles.label}>
-                      {format(new Date(item.date).toString(), "MMMM dd yyyy")}
-                    </Text>
+      {violationRecords.length > 0 ? (
+        <View style={styles.violationContainer}>
+          <View style={styles.violationBox}>
+            <FlatList
+              data={violationRecords}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => openModal(item)}>
+                  <View style={styles.violationIcon}>
+                    <AntDesign
+                      style={styles.icon}
+                      name="exclamationcircleo"
+                      size={24}
+                      color="red"
+                    />
+                    <View style={styles.violationInfo}>
+                      <Text style={styles.violation}>{item.violation!.violationName}</Text>
+                      <Text style={styles.label}>
+                        {format(new Date(item.date).toString(), "MMMM dd yyyy")}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.fine}>
+                        {"₱ "}
+                        {item.violation!.penalty}
+                      </Text>
+                      <Text style={item.status === "PAID" ? styles.textPaid : styles.textUnpaid}>
+                        {item.status}
+                      </Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text style={styles.fine}>
-                      {"₱ "}
-                      {item.violation!.penalty}
-                    </Text>
-                    <Text style={item.status === "PAID" ? styles.textPaid : styles.textUnpaid}>
-                      {item.status}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-          <Modal
-            transparent={true}
-            visible={isVisible}
-            onRequestClose={() => setIsModalVisible(false)}
-            animationType="fade"
-          >
-            <ViolationModal
-              closeModal={() => setIsModalVisible(false)}
-              violation={selectedViolation!}
+                </TouchableOpacity>
+              )}
             />
-          </Modal>
+            <Modal
+              transparent={true}
+              visible={isVisible}
+              onRequestClose={() => setIsModalVisible(false)}
+              animationType="fade"
+            >
+              <ViolationModal
+                closeModal={() => setIsModalVisible(false)}
+                violation={selectedViolation!}
+              />
+            </Modal>
+          </View>
         </View>
-      </View>
+      ) : null}
     </ScrollView>
   );
 };
@@ -231,8 +242,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flexDirection: "row",
-    alignSelf: "center",
-    borderColor: "white"
+    alignSelf: "center"
   },
   icon: {
     marginRight: 15
@@ -271,5 +281,25 @@ const styles = StyleSheet.create({
     width: 60,
     marginRight: 20,
     alignSelf: "center"
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 16
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    alignSelf: "flex-end",
+    marginTop: 10
+  },
+  buttonIcon: {
+    marginRight: 5,
+    paddingLeft: 4
   }
 });
