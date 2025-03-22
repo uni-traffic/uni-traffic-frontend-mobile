@@ -1,6 +1,7 @@
 import { View } from "@/components/Themed";
 import { AdminDashboard } from "@/components/admin/dashboard";
 import { UserDashboard } from "@/components/user/dashboard";
+import { GuestDashboard } from "@/components/user/guestDashboard";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
@@ -17,8 +18,10 @@ export default function Dashboard() {
     <View style={styles.container}>
       {user?.role === "ADMIN" || user?.role === "SUPERADMIN" ? (
         <AdminDashboard />
-      ) : (
+      ) : user?.role === "STUDENT" || user?.role === "STAFF" ? (
         <UserDashboard />
+      ) : (
+        <GuestDashboard />
       )}
     </View>
   );

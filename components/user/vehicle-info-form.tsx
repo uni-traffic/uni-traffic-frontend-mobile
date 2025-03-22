@@ -1,9 +1,14 @@
+import type { VehicleDetailsForm } from "@/app/register";
 import { FilePicker } from "@/components/common/file-picker";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-export const VehicleForm = () => {
+export interface VehicleFormProps {
+  setVehicleDetails: Dispatch<SetStateAction<VehicleDetailsForm>>;
+}
+
+export const VehicleForm = ({ setVehicleDetails }: VehicleFormProps) => {
   const [type, setType] = useState<string>("");
   const [make, setMake] = useState<string>("");
   const [series, setSeries] = useState<string>("");
@@ -15,10 +20,37 @@ export const VehicleForm = () => {
   const [backImage, setBackImage] = useState<string>("");
   const [sideImage, setSideImage] = useState<string>("");
 
+  useEffect(() => {
+    setVehicleDetails({
+      make: make,
+      series: series,
+      type: type,
+      model: model,
+      licensePlate: licensePlate,
+      certificateOfRegistration: crImage,
+      officialReceipt: orImage,
+      frontImage: frontImage,
+      backImage: backImage,
+      sideImage: sideImage
+    });
+  }, [
+    make,
+    series,
+    type,
+    model,
+    licensePlate,
+    crImage,
+    orImage,
+    frontImage,
+    backImage,
+    sideImage,
+    setVehicleDetails
+  ]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}> Vehicle Registration Form</Text>
+        <Text style={styles.title}> Vehicle Registration Details</Text>
       </View>
       <View style={styles.body}>
         <View style={styles.section}>
@@ -42,8 +74,8 @@ export const VehicleForm = () => {
             style={styles.dropdown}
             placeholder="Select Type"
             data={[
-              { id: "motorcycle", type: "Motorcycle" },
-              { id: "car", type: "Car" }
+              { id: "MOTORCYCLE", type: "MOTORCYCLE" },
+              { id: "CAR", type: "CAR" }
             ]}
             valueField="id"
             labelField="type"
@@ -85,7 +117,7 @@ export const VehicleForm = () => {
         <View style={styles.section}>
           <View style={styles.labelSection}>
             <Text style={styles.label}>Official Receipt</Text>
-            <Text style={styles.subLabel}>(OR)</Text>
+            <Text style={styles.subLabel}>(Latest Official Receipt)</Text>
           </View>
           <FilePicker setUploadedImageUrl={setORImage} />
         </View>
@@ -150,6 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     alignSelf: "flex-start",
+    marginRight: 2,
     marginBottom: 3
   },
   input: {
@@ -165,11 +198,10 @@ const styles = StyleSheet.create({
   },
   labelSection: {
     flexDirection: "row",
-    width: "100%",
-    alignContent: "flex-start"
+    width: "100%"
   },
   subLabel: {
-    fontSize: 12,
+    fontSize: 14,
     color: "gray"
   },
   dropdown: {

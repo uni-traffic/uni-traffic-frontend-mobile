@@ -47,8 +47,8 @@ export const FilePicker = ({ setUploadedImageUrl }: FilePickerProps) => {
         }
       });
 
-      setResult(response.data);
-      setUploadedImageUrl(response.data);
+      setResult(response.data.path);
+      setUploadedImageUrl(response.data.path);
     } catch (err) {
       const error = err as AxiosError;
 

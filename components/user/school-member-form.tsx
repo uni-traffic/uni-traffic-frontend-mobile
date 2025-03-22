@@ -1,19 +1,34 @@
+import type { SchoolMemberForm } from "@/app/register";
 import { FilePicker } from "@/components/common/file-picker";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-export const UserForm = () => {
+export interface SchoolMemberProps {
+  setSchoolMember: Dispatch<SetStateAction<SchoolMemberForm>>;
+}
+
+export const SchoolMemberInformationForm = ({ setSchoolMember }: SchoolMemberProps) => {
   const [type, setType] = useState<string>("");
   const [schoolID, setSchoolID] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [image, setImage] = useState<string>("");
 
+  useEffect(() => {
+    setSchoolMember({
+      schoolId: schoolID,
+      useType: type,
+      firstName: firstName,
+      lastName: lastName,
+      schoolCredential: image
+    });
+  }, [type, schoolID, firstName, lastName, image, setSchoolMember]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}> Staff/Student Form</Text>
+        <Text style={styles.title}> Staff/Student Details</Text>
       </View>
       <View style={styles.body}>
         <View style={styles.section}>
@@ -66,8 +81,8 @@ export const UserForm = () => {
 
         <View style={styles.section}>
           <View style={styles.labelSection}>
-            <Text style={styles.label}>School Credentials</Text>
-            <Text style={styles.subLabel}>(School ID, COM, OR)</Text>
+            <Text style={styles.label}>School Credential</Text>
+            <Text style={styles.subLabel}>(School ID or COM)</Text>
           </View>
           <FilePicker setUploadedImageUrl={setImage} />
         </View>
@@ -108,6 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     alignSelf: "flex-start",
+    marginRight: 2,
     marginBottom: 3
   },
   input: {
@@ -123,11 +139,10 @@ const styles = StyleSheet.create({
   },
   labelSection: {
     flexDirection: "row",
-    width: "100%",
-    alignContent: "flex-start"
+    width: "100%"
   },
   subLabel: {
-    fontSize: 12,
+    fontSize: 14,
     color: "gray"
   },
   upload: {

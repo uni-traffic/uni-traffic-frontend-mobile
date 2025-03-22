@@ -16,7 +16,6 @@ import {
   View
 } from "react-native";
 import ViolationModal from "./violation-details";
-import { router } from "expo-router";
 
 export const UserDashboard = () => {
   const { user } = useAuth();
@@ -61,10 +60,10 @@ export const UserDashboard = () => {
             <Text style={styles.headerText}>UNITRAFFIC</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.button} onPress={() => router.push("/register")}>
-            <AntDesign style={styles.buttonIcon} name="form" size={22} color="black" />
-             <Text style={styles.buttonText}>Register Vehicle</Text> 
-            </TouchableOpacity>     
+        {/*<TouchableOpacity style={styles.button} onPress={() => router.push("/register")}>*/}
+        {/*  <AntDesign style={styles.buttonIcon} name="form" size={22} color="black" />*/}
+        {/*  <Text style={styles.buttonText}>Apply for Vehicle Sticker</Text>*/}
+        {/*</TouchableOpacity>*/}
       </View>
 
       <View style={styles.bodyContainer}>
@@ -93,47 +92,54 @@ export const UserDashboard = () => {
         </View>
       </View>
 
-      <View style={styles.violationContainer}>
-        <View style={styles.violationBox}>
-          <FlatList
-            data={violationRecords}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => openModal(item)}>
-                <View style={styles.violationIcon}>
-                  <AntDesign style={styles.icon} name="exclamationcircleo" size={24} color="red" />
-                  <View style={styles.violationInfo}>
-                    <Text style={styles.violation}>{item.violation!.violationName}</Text>
-                    <Text style={styles.label}>
-                      {format(new Date(item.date).toString(), "MMMM dd yyyy")}
-                    </Text>
+      {violationRecords.length > 0 ? (
+        <View style={styles.violationContainer}>
+          <View style={styles.violationBox}>
+            <FlatList
+              data={violationRecords}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => openModal(item)}>
+                  <View style={styles.violationIcon}>
+                    <AntDesign
+                      style={styles.icon}
+                      name="exclamationcircleo"
+                      size={24}
+                      color="red"
+                    />
+                    <View style={styles.violationInfo}>
+                      <Text style={styles.violation}>{item.violation!.violationName}</Text>
+                      <Text style={styles.label}>
+                        {format(new Date(item.date).toString(), "MMMM dd yyyy")}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.fine}>
+                        {"₱ "}
+                        {item.violation!.penalty}
+                      </Text>
+                      <Text style={item.status === "PAID" ? styles.textPaid : styles.textUnpaid}>
+                        {item.status}
+                      </Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text style={styles.fine}>
-                      {"₱ "}
-                      {item.violation!.penalty}
-                    </Text>
-                    <Text style={item.status === "PAID" ? styles.textPaid : styles.textUnpaid}>
-                      {item.status}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-          <Modal
-            transparent={true}
-            visible={isVisible}
-            onRequestClose={() => setIsModalVisible(false)}
-            animationType="fade"
-          >
-            <ViolationModal
-              closeModal={() => setIsModalVisible(false)}
-              violation={selectedViolation!}
+                </TouchableOpacity>
+              )}
             />
-          </Modal>
+            <Modal
+              transparent={true}
+              visible={isVisible}
+              onRequestClose={() => setIsModalVisible(false)}
+              animationType="fade"
+            >
+              <ViolationModal
+                closeModal={() => setIsModalVisible(false)}
+                violation={selectedViolation!}
+              />
+            </Modal>
+          </View>
         </View>
-      </View>
+      ) : null}
     </ScrollView>
   );
 };
@@ -145,7 +151,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   textContainer: {
-    justifyContent: "center",
+    justifyContent: "center"
   },
   bodyContainer: {
     flexDirection: "row",
@@ -221,7 +227,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   text: {
-    fontSize: 18,
+    fontSize: 18
   },
   label: {
     fontSize: 10,
@@ -232,11 +238,11 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     width: "100%",
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 20
   },
   titleContainer: {
     flexDirection: "row",
-    alignSelf: "center",
+    alignSelf: "center"
   },
   icon: {
     marginRight: 15
@@ -295,5 +301,5 @@ const styles = StyleSheet.create({
   buttonIcon: {
     marginRight: 5,
     paddingLeft: 4
-  },
+  }
 });

@@ -1,30 +1,31 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import type { DriverDetailsForm } from "@/app/register";
+import { FilePicker } from "@/components/common/file-picker";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
-export const DriverForm = () => {
+export interface DriverFormProps {
+  setDriverDetails: Dispatch<SetStateAction<DriverDetailsForm>>;
+}
+
+export const DriverForm = ({ setDriverDetails }: DriverFormProps) => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [licenseID, setLicenseID] = useState<string>("");
   const [licenseImage, setLicenseImage] = useState<string>("");
 
-  const uploadLicenseImage = async () => {
-    await ImagePicker.requestMediaLibraryPermissionsAsync();
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      quality: 1
+  useEffect(() => {
+    setDriverDetails({
+      firstName: firstName,
+      lastName: lastName,
+      licenseId: licenseID,
+      licenseImage: licenseImage
     });
-    if (!result.canceled) {
-      setLicenseImage(result.assets[0].uri);
-    }
-  };
+  }, [licenseID, licenseImage, firstName, lastName, setDriverDetails]);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Driver Form</Text>
+        <Text style={styles.title}>Driver Details</Text>
       </View>
       <View style={styles.body}>
         <View style={styles.section}>
@@ -59,13 +60,7 @@ export const DriverForm = () => {
 
         <View style={styles.section}>
           <Text style={styles.label}>License Image</Text>
-          <TouchableOpacity style={styles.upload} onPress={uploadLicenseImage}>
-            {licenseImage ? (
-              <Image source={{ uri: licenseImage }} style={styles.uploadedImage} />
-            ) : (
-              <MaterialIcons name="add-photo-alternate" size={24} color="black" />
-            )}
-          </TouchableOpacity>
+          <FilePicker setUploadedImageUrl={setLicenseImage} />
         </View>
       </View>
     </View>
