@@ -1,13 +1,21 @@
 import { useAuth } from "@/context/authContext";
 import { useState } from "react";
-import { Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  ImageBackground,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
 import { StyleSheet } from "react-native";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, signInWithGoogle, error } = useAuth();
+  const { login, signInWithGoogle, error, isLoading } = useAuth();
   const handleLogin = async () => {
     await login(username, password);
   };
@@ -68,8 +76,16 @@ export default function Login() {
             />
           </View>
           <View style={newStyles.formSection}>
-            <TouchableOpacity style={newStyles.formSubmitButton} onPress={handleLogin}>
-              <Text style={newStyles.formButtonText}>Login</Text>
+            <TouchableOpacity
+              style={[newStyles.formSubmitButton, isLoading && newStyles.loading]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator size={"small"} color="white" />
+              ) : (
+                <Text style={newStyles.formButtonText}>Login</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -92,6 +108,10 @@ const newStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 2
+  },
+  loading: {
+    backgroundColor: "#71797E",
+    borderColor: "#71797E"
   },
   logoContainer: {
     height: "20%",

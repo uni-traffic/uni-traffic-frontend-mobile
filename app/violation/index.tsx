@@ -6,7 +6,15 @@ import { useNavigation, useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { defaultTo } from "rambda";
 import { useState } from "react";
-import { Image, Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Keyboard,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
 import { StyleSheet } from "react-native";
 
 export default function Violation() {
@@ -19,6 +27,7 @@ export default function Violation() {
   );
   const [violation, setViolation] = useState("");
   const [remarks, setRemarks] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { user } = useAuth();
   const navigation = useNavigation();
@@ -45,6 +54,7 @@ export default function Violation() {
     }
 
     try {
+      setLoading(true);
       const response: AxiosResponse = await api.post("/violation-record/create", {
         vehicleId: queryParams.vehicleId,
         licensePlate: licensePlate ? licensePlate.replace(" ", "") : undefined,
@@ -62,6 +72,8 @@ export default function Violation() {
       const errorMessage = (error.response?.data as { message: string }).message;
 
       alert(`Error occurred submitting violation:\n${errorMessage}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,8 +143,16 @@ export default function Violation() {
           <TouchableOpacity style={styles.button} onPress={handleCancel}>
             <Text style={styles.btnLabel}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.btnLabel}>Submit</Text>
+          <TouchableOpacity
+            style={[styles.button, loading && styles.loading]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator size={"small"} color="white" />
+            ) : (
+              <Text style={styles.btnLabel}>Submit</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -146,10 +166,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#EBEAF0",
     width: "100%"
   },
+  loading: {
+    backgroundColor: "#71797E",
+    borderColor: "#71797E"
+  },
   headerContainer: {
     flexDirection: "row",
     alignItems: "flex-start"
-    // justifyContent: "center"
   },
   textContainer: {
     height: "100%",

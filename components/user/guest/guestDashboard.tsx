@@ -7,7 +7,7 @@ export const GuestDashboard = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
+          <Image style={styles.logo} source={require("../../../assets/images/neu-logo.png")} />
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>UNITRAFFIC</Text>
           </View>
@@ -18,7 +18,7 @@ export const GuestDashboard = () => {
           <AntDesign style={styles.buttonIcon} name="form" size={22} color="black" />
           <Text style={styles.buttonText}>Apply for Vehicle Sticker</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menu}>
+        <TouchableOpacity style={styles.menu} onPress={() => router.push("/application")}>
           <MaterialCommunityIcons
             style={styles.buttonIcon}
             name="clipboard-file-outline"
@@ -35,7 +35,7 @@ export const GuestDashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#eee"
+    backgroundColor: "#EBEAF0"
   },
   header: {
     backgroundColor: "black",

@@ -5,16 +5,7 @@ import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import type { AxiosError } from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import {
-  FlatList,
-  Image,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ViolationModal from "./violation-details";
 
 export const UserDashboard = () => {
@@ -55,7 +46,7 @@ export const UserDashboard = () => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
-          <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
+          <Image style={styles.logo} source={require("../../../assets/images/neu-logo.png")} />
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>UNITRAFFIC</Text>
           </View>
@@ -95,11 +86,9 @@ export const UserDashboard = () => {
       {violationRecords.length > 0 ? (
         <View style={styles.violationContainer}>
           <View style={styles.violationBox}>
-            <FlatList
-              data={violationRecords}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => openModal(item)}>
+            {violationRecords.map((item) => {
+              return (
+                <TouchableOpacity onPress={() => openModal(item)} key={item.id}>
                   <View style={styles.violationIcon}>
                     <AntDesign
                       style={styles.icon}
@@ -124,8 +113,8 @@ export const UserDashboard = () => {
                     </View>
                   </View>
                 </TouchableOpacity>
-              )}
-            />
+              );
+            })}
             <Modal
               transparent={true}
               visible={isVisible}
