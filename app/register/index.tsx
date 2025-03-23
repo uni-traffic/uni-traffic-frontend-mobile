@@ -1,9 +1,11 @@
-import { DriverForm } from "@/components/user/driver-info-form";
-import { SchoolMemberInformationForm } from "@/components/user/school-member-form";
-import { VehicleForm } from "@/components/user/vehicle-info-form";
+import api from "@/api/axios";
+import { DriverForm } from "@/components/user/guest/driver-info-form";
+import { SchoolMemberInformationForm } from "@/components/user/guest/school-member-form";
+import { VehicleForm } from "@/components/user/guest/vehicle-info-form";
+import type { VehicleApplication } from "@/lib/types";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native";
 
 export interface SchoolMemberForm {
@@ -63,6 +65,9 @@ const validationMessages = {
 };
 
 export default function Register() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState<VehicleApplication | null>();
+
   const [schoolMember, setSchoolMember] = useState<SchoolMemberForm>({
     schoolId: "",
     firstName: "",
@@ -116,8 +121,43 @@ export default function Register() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     validateValues();
+
+    setIsLoading(true);
+    try {
+      const response = await api.post("/vehicle-application/create", {
+        schoolId: schoolMember.schoolId,
+        firstName: schoolMember.firstName,
+        lastName: schoolMember.lastName,
+        userType: schoolMember.useType,
+        schoolCredential: schoolMember.schoolCredential,
+
+        driverFirstName: driverDetails.firstName,
+        driverLastName: driverDetails.lastName,
+        driverLicenseId: driverDetails.licenseId,
+        driverLicenseImage: driverDetails.licenseImage,
+
+        make: vehicleDetails.make,
+        series: vehicleDetails.series,
+        type: vehicleDetails.type,
+        model: vehicleDetails.model,
+        licensePlate: vehicleDetails.licensePlate,
+        certificateOfRegistration: vehicleDetails.certificateOfRegistration,
+        officialReceipt: vehicleDetails.officialReceipt,
+        frontImage: vehicleDetails.frontImage,
+        backImage: vehicleDetails.backImage,
+        sideImage: vehicleDetails.sideImage
+      });
+      if (response.status !== 201) return;
+
+      alert("Application Submitted Successfully");
+      router.replace("/(user)");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -155,8 +195,18 @@ export default function Register() {
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Submit</Text>
+              <TouchableOpacity
+                style={StyleSheet.compose(styles.button, isLoading && styles.loading)}
+                onPress={handleSubmit}
+                disabled={isLoading}
+              >
+                {!isLoading ? (
+                  <Text style={styles.buttonText}>Submit</Text>
+                ) : (
+                  <View style={styles.submitButtonContainer}>
+                    <ActivityIndicator size={"small"} color="white" style={styles.loader} />
+                  </View>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -167,10 +217,16 @@ export default function Register() {
 }
 
 const styles = StyleSheet.create({
+  submitButtonContainer: {
+    flexDirection: "row"
+  },
+  loader: {
+    marginRight: 10
+  },
   mainContainer: {
     flex: 1,
     flexGrow: 1,
-    backgroundColor: "#eee",
+    backgroundColor: "#EBEAF0",
     width: "100%",
     minHeight: 300
   },
@@ -237,7 +293,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
     alignSelf: "flex-end",
     width: "40%",
-    justifyContent: "center"
+    justifyContent: "center",
+    height: 40
+  },
+  loading: {
+    backgroundColor: "#71797E",
+    borderColor: "#71797E"
   },
   btnContainer: {
     flexDirection: "row",

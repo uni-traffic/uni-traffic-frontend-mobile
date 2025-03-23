@@ -1,7 +1,7 @@
 import { View } from "@/components/Themed";
 import { AdminDashboard } from "@/components/admin/dashboard";
-import { UserDashboard } from "@/components/user/dashboard";
-import { GuestDashboard } from "@/components/user/guestDashboard";
+import { GuestDashboard } from "@/components/user/guest/guestDashboard";
+import { UserDashboard } from "@/components/user/normal/dashboard";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";

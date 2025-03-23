@@ -56,6 +56,7 @@ function RootLayoutNav() {
           <Stack.Screen name="vehicle" options={{ headerShown: false }} />
           <Stack.Screen name="(user)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="application" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </AuthProvider>
