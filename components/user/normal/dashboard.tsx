@@ -4,8 +4,17 @@ import type { ViolationRecord } from "@/lib/types";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import type { AxiosError } from "axios";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
-import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Image,
+  Modal,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 import ViolationModal from "./violation-details";
 
 export const UserDashboard = () => {
@@ -13,8 +22,9 @@ export const UserDashboard = () => {
   const [isVisible, setIsModalVisible] = useState(false);
   const [selectedViolation, setSelectedViolation] = useState<ViolationRecord | null>(null);
   const [violationRecords, setViolationRecords] = useState<ViolationRecord[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const fetchUserViolationRecords = async () => {
+  const fetchUserViolationRecords = useCallback(async () => {
     try {
       const response = await api.get("/violation-record/search", {
         params: {
@@ -30,20 +40,27 @@ export const UserDashboard = () => {
       const error = err as AxiosError;
       console.log(error);
     }
-  };
+  }, [user?.id]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchUserViolationRecords();
-  }, []);
+  }, [fetchUserViolationRecords]);
 
   const openModal = (violation: ViolationRecord) => {
     setSelectedViolation(violation);
     setIsModalVisible(true);
   };
 
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchUserViolationRecords().finally(() => setRefreshing(false));
+  }, [fetchUserViolationRecords]);
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+    >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Image style={styles.logo} source={require("../../../assets/images/neu-logo.png")} />

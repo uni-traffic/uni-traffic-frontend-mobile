@@ -26,9 +26,9 @@ export interface Vehicle {
   color: string;
   type: string;
   images: string[];
+  status: string;
   stickerNumber: string;
-  isActive: boolean;
-  owner: User;
+  owner: User | null;
 }
 
 export interface Violation {
@@ -51,6 +51,18 @@ export interface ViolationRecord {
   reporter: User | null;
   violation: Violation | null;
   vehicle: Vehicle | null;
+  payment: ViolationRecordPayment | null;
+}
+
+export interface ViolationRecordPayment {
+  id: string;
+  cashierId: string;
+  violationRecordId: string;
+  amountPaid: number;
+  remarks: string | null;
+  timePaid: Date;
+  cashier: User | null;
+  violationRecord: ViolationRecord | null;
 }
 
 export interface VehicleApplication {

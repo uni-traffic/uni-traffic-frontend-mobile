@@ -2,7 +2,7 @@ import api from "@/api/axios";
 import { DriverForm } from "@/components/user/guest/driver-info-form";
 import { SchoolMemberInformationForm } from "@/components/user/guest/school-member-form";
 import { VehicleForm } from "@/components/user/guest/vehicle-info-form";
-import type { VehicleApplication } from "@/lib/types";
+import type { AxiosError } from "axios";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -66,7 +66,6 @@ const validationMessages = {
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<VehicleApplication | null>();
 
   const [schoolMember, setSchoolMember] = useState<SchoolMemberForm>({
     schoolId: "",
@@ -153,8 +152,13 @@ export default function Register() {
 
       alert("Application Submitted Successfully");
       router.replace("/(user)");
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      const error = err as AxiosError;
+
+      alert(
+        (error.response?.data as { message: string | undefined })?.message ??
+          "Something went wrong please try again later"
+      );
     } finally {
       setIsLoading(false);
     }

@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Image,
   Modal,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -23,6 +24,7 @@ export default function Application() {
   const [selectedApplication, setSelectedApplication] = useState<VehicleApplication | null>(null);
   const [vehicleApplication, setVehicleApplication] = useState<VehicleApplication[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const fetchVehicleStickerApplication = useCallback(async () => {
     setLoading(true);
@@ -57,8 +59,16 @@ export default function Application() {
     setIsModalVisible(true);
   };
 
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchVehicleStickerApplication().finally(() => setRefreshing(false));
+  }, [fetchVehicleStickerApplication]);
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+    >
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
