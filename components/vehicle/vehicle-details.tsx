@@ -20,6 +20,16 @@ export const VehicleDetails = ({ vehicle }: { vehicle: Vehicle }) => {
             </Text>
           </View>
         </View>
+
+         {/* Vehicle Image */}
+         {vehicle.images?.length > 0 && (
+          <Image
+            source={require("@/assets/images/neu-camp.png")}
+            style={styles.vehicleImage}
+            resizeMode="contain"
+          />
+        )}
+
         {/* Vehicle details body */}
         <VehicleInfoBody title="Type" value={vehicle.type} />
         <VehicleInfoBody title="Make" value={vehicle.make} />
@@ -122,5 +132,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontWeight: "bold",
     textAlign: "center"
+  },
+  vehicleImage: {
+    width: "90%",
+    height: 200,
+    borderRadius: 10,
+    marginVertical: 10
   }
 });
