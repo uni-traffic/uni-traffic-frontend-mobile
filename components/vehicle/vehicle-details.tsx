@@ -21,14 +21,14 @@ export const VehicleDetails = ({ vehicle }: { vehicle: Vehicle }) => {
           </View>
         </View>
 
-         {/* Vehicle Image */}
-         {vehicle.images?.length > 0 && (
-          <Image
-            source={require("@/assets/images/neu-camp.png")}
-            style={styles.vehicleImage}
-            resizeMode="contain"
-          />
-        )}
+        {/* /!* Vehicle Image *!/*/}
+        {/* {vehicle.images?.length > 0 && (*/}
+        {/*  <Image*/}
+        {/*    source={require("@/assets/images/neu-camp.png")}*/}
+        {/*    style={styles.vehicleImage}*/}
+        {/*    resizeMode="contain"*/}
+        {/*  />*/}
+        {/*)}*/}
 
         {/* Vehicle details body */}
         <VehicleInfoBody title="Type" value={vehicle.type} />
@@ -58,7 +58,6 @@ const VehicleInfoBody = ({ title, value }: { title: string; value: string | numb
 
 const styles = StyleSheet.create({
   containerInfo: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     width: "95%",
@@ -69,10 +68,10 @@ const styles = StyleSheet.create({
     paddingVertical: "1%"
   },
   containerInfoHeader: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    minHeight: 20,
     width: "95%",
     backgroundColor: "#EBEAF0",
     margin: "2%",
@@ -85,10 +84,10 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   containerInfoBody: {
-    flex: 1,
     width: "95%",
     margin: "2%",
     padding: "3%",
+    minHeight: 10,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row"

@@ -1,9 +1,9 @@
-import { View, Image, Text, StyleSheet } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 interface ProfileHeaderProps {
   name: string;
   email: string;
-  avatarUrl:  string | null;
+  avatarUrl: string | null;
 }
 
 export const ProfileHeader = ({ name, email, avatarUrl }: ProfileHeaderProps) => {
@@ -15,7 +15,7 @@ export const ProfileHeader = ({ name, email, avatarUrl }: ProfileHeaderProps) =>
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <View style={styles.avatarWrapper}>
+        <View>
           {avatarUrl ? (
             <Image source={{ uri: avatarUrl }} style={styles.avatar} />
           ) : (
@@ -32,22 +32,17 @@ export const ProfileHeader = ({ name, email, avatarUrl }: ProfileHeaderProps) =>
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
+  container: {},
   headerContainer: {
     alignItems: "center",
     paddingHorizontal: 16
-  },
-  avatarWrapper: {
-    position: "relative"
   },
   avatar: {
     height: 128,
     width: 128,
     borderRadius: 64,
     borderWidth: 4,
-    borderColor: "Black"
+    borderColor: "#ffffff"
   },
   avatarFallback: {
     backgroundColor: "#EBEAF0",
@@ -57,13 +52,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "Black",
+    color: "white",
     marginTop: 16,
     marginBottom: 8
   },
   email: {
     fontSize: 16,
-    color: "#666",
+    color: "white",
     marginBottom: 8
   },
   avatarText: {

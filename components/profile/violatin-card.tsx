@@ -1,7 +1,7 @@
 import type { ViolationRecord } from "@/lib/types";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ViolationCardProps {
   record: ViolationRecord;
@@ -24,14 +24,14 @@ export const ViolationCard = ({ record }: ViolationCardProps) => {
             <Feather name="alert-triangle" color="#facc15" size={25} style={styles.icon} />
             <View>
               <Text style={styles.title}>{violation?.violationName}</Text>
-              <Text style={styles.subtitle}>{violation?.category}</Text>
+              {/*<Text style={styles.subtitle}>{violation?.category}</Text>*/}
             </View>
           </View>
           <View style={styles.headerRight}>
             <View
               style={[
                 styles.statusBadge,
-                status.toLowerCase() === "resolved" ? styles.resolvedBadge : styles.unresolvedBadge
+                status.toUpperCase() === "PAID" ? styles.resolvedBadge : styles.unresolvedBadge
               ]}
             >
               <Text style={styles.statusText}>{status}</Text>
@@ -73,12 +73,15 @@ export const ViolationCard = ({ record }: ViolationCardProps) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#2C2C2C",
     borderRadius: 12,
-    marginBottom: 12,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "white"
+    backgroundColor: "white",
+    borderColor: "#ccc",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2
   },
   header: {
     padding: 16,
@@ -87,6 +90,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   headerLeft: {
+    width: "60%",
     flexDirection: "row",
     gap: 12,
     alignItems: "center"
@@ -95,12 +99,12 @@ const styles = StyleSheet.create({
     marginRight: 8
   },
   title: {
-    color: "#ffffff",
+    color: "black",
     fontWeight: "600",
     fontSize: 16
   },
   subtitle: {
-    color: "white",
+    color: "black",
     fontSize: 13
   },
   headerRight: {
@@ -114,42 +118,42 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   resolvedBadge: {
-    backgroundColor: "#F2FCE2"
+    backgroundColor: "#00ff3c"
   },
   unresolvedBadge: {
-    backgroundColor: "#FFA500"
+    backgroundColor: "#ff0000"
   },
   statusText: {
     fontSize: 12,
-    color: "#333",
+    color: "#ffffff",
     fontWeight: "500"
   },
   content: {
-    backgroundColor: "#2C2C2C",
+    backgroundColor: "white",
     padding: 16,
     gap: 12
   },
   infoText: {
-    color: "#8E9196",
+    color: "black",
     fontSize: 13
   },
   sectionLabel: {
-    color: "#ffffff",
+    color: "black",
     fontWeight: "600",
     fontSize: 14,
     marginTop: 10
   },
   remarksBox: {
-    backgroundColor: "#1A1F2C",
+    backgroundColor: "#EBEAF0",
     padding: 12,
     borderRadius: 8
   },
   remarksText: {
-    color: "#8E9196",
+    color: "black",
     fontSize: 13
   },
   penaltyBox: {
-    backgroundColor: "#1A1F2C",
+    backgroundColor: "#EBEAF0",
     padding: 12,
     borderRadius: 8,
     flexDirection: "row",
@@ -157,11 +161,11 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   penaltyLabel: {
-    color: "#8E9196",
+    color: "black",
     fontSize: 13
   },
   penaltyValue: {
-    color: "#ffffff",
+    color: "red",
     fontWeight: "600",
     fontSize: 15
   }

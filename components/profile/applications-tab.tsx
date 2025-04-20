@@ -1,12 +1,17 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { useAuth } from "@/context/authContext";
+import { useVehicleApplications } from "@/hooks/violationRecord/useVehicleApplications";
 import type { VehicleApplication } from "@/lib/types";
 import { AntDesign } from "@expo/vector-icons";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
-interface VehicleApplicationProps {
-  vehicleApplications: VehicleApplication[];
-}
+export const ApplicationsTab = () => {
+  const { user } = useAuth();
+  const { data: vehicleApplications, isPending } = useVehicleApplications({
+    applicantId: user?.id,
+    count: 10,
+    page: 1
+  });
 
-export const ApplicationsTab = ({ vehicleApplications }: VehicleApplicationProps) => {
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString("en-US", {
       month: "short",
@@ -16,13 +21,15 @@ export const ApplicationsTab = ({ vehicleApplications }: VehicleApplicationProps
   };
 
   const getStatusStyle = (status: string) => {
-    switch (status) {
-      case "Approved":
-        return { backgroundColor: "rgba(16, 185, 129, 0.2)", color: "#10B981" };
-      case "Pending":
-        return { backgroundColor: "rgba(234, 179, 8, 0.2)", color: "#EAB308" };
+    const formattedStatus = status.toUpperCase();
+
+    switch (formattedStatus) {
+      case "APPROVED":
+        return { backgroundColor: "rgb(0,255,60)", color: "#ffffff" };
+      case "REJECTED":
+        return { backgroundColor: "rgb(255,0,0)", color: "#ffffff" };
       default:
-        return { backgroundColor: "rgba(239, 68, 68, 0.2)", color: "#EF4444" };
+        return { backgroundColor: "rgb(243,182,27)", color: "#ffffff" };
     }
   };
 
@@ -60,7 +67,7 @@ export const ApplicationsTab = ({ vehicleApplications }: VehicleApplicationProps
 
   return (
     <View style={styles.container}>
-      {vehicleApplications.length > 0 ? (
+      {!isPending && vehicleApplications && vehicleApplications.length > 0 ? (
         <FlatList
           data={vehicleApplications}
           keyExtractor={(item) => item.id.toString()}
@@ -69,8 +76,8 @@ export const ApplicationsTab = ({ vehicleApplications }: VehicleApplicationProps
         />
       ) : (
         <View style={styles.emptyState}>
-          <AntDesign name="filetext1" size={35} color="white" style={{ opacity: 0.5 }} />
-          <Text style={styles.emptyText}>No active applications</Text>
+          <AntDesign name="filetext1" size={35} color="#000000" style={{ opacity: 0.5 }} />
+          <Text style={styles.emptyText}>No Vehicle Applications Found</Text>
         </View>
       )}
     </View>
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "#2C2C2C"
+    backgroundColor: "#eee"
   },
   header: {
     flexDirection: "row",
@@ -93,11 +100,15 @@ const styles = StyleSheet.create({
     color: "white"
   },
   card: {
-    backgroundColor: "#2C2C2C",
-    borderColor: "white",
     borderWidth: 1,
     borderRadius: 8,
-    padding: 16
+    padding: 16,
+    backgroundColor: "white",
+    borderColor: "#ccc",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2
   },
   headerRow: {
     flexDirection: "row",
@@ -107,12 +118,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: "#000000",
     marginBottom: 4
   },
   subText: {
     fontSize: 13,
-    color: "white"
+    color: "#000000"
   },
   status: {
     fontSize: 12,
@@ -128,6 +139,7 @@ const styles = StyleSheet.create({
     paddingVertical: 64
   },
   emptyText: {
-    color: "white"
+    marginTop: 6,
+    color: "black"
   }
 });

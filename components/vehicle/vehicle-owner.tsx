@@ -51,7 +51,6 @@ const VehicleInfoRow = ({ title, value }: { title: string; value: string | numbe
 
 const styles = StyleSheet.create({
   containerInfo: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     width: "95%",
@@ -62,7 +61,6 @@ const styles = StyleSheet.create({
     paddingVertical: "1%"
   },
   containerInfoHeader: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -78,7 +76,6 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   containerInfoBody: {
-    flex: 1,
     width: "95%",
     margin: "2%",
     padding: "3%",

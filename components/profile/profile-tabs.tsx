@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ProfileTabsProps {
   activeTab: string;
@@ -32,13 +32,11 @@ export const ProfileTabs = ({ activeTab, onTabChange }: ProfileTabsProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#2C2C2C"
+    backgroundColor: "#ddd"
   },
   tabRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    borderBottomColor: "#333",
-    borderBottomWidth: 1
+    justifyContent: "space-between"
   },
   tabButton: {
     paddingVertical: 16,
@@ -50,9 +48,9 @@ const styles = StyleSheet.create({
     fontWeight: "500"
   },
   activeTabText: {
-    color: "white"
+    color: "#3C3C3EFF"
   },
   inactiveTabText: {
-    color: "#8E9196"
+    color: "black"
   }
 });

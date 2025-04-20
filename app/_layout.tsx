@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import { AuthProvider } from "@/context/authContext";
+import { ReactQueryProvider } from "@/context/queryProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -46,18 +47,20 @@ function RootLayoutNav() {
   return (
     <AuthProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="auth" options={{ headerShown: false }} />
-          <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
-          <Stack.Screen name="security" options={{ headerShown: false }} />
-          <Stack.Screen name="register" options={{ headerShown: false }} />
-          <Stack.Screen name="violation" options={{ headerShown: false }} />
-          <Stack.Screen name="vehicle" options={{ headerShown: false }} />
-          <Stack.Screen name="(user)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="application" options={{ headerShown: false }} />
-        </Stack>
+        <ReactQueryProvider>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="auth" options={{ headerShown: false }} />
+            <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
+            <Stack.Screen name="security" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen name="violation" options={{ headerShown: false }} />
+            <Stack.Screen name="vehicle" options={{ headerShown: false }} />
+            <Stack.Screen name="(user)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            <Stack.Screen name="application" options={{ headerShown: false }} />
+          </Stack>
+        </ReactQueryProvider>
       </ThemeProvider>
     </AuthProvider>
   );
