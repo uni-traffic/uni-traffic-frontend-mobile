@@ -30,6 +30,7 @@ export default function VehicleInformation() {
   const queryParams = useGlobalSearchParams();
 
   const getVehicle = useCallback(async () => {
+    console.log("Fetching vehicle");
     setLoading(true);
 
     try {
@@ -44,9 +45,11 @@ export default function VehicleInformation() {
         console.error("Unknown response");
         return;
       }
+      console.log("Response", response);
 
       setVehicle(response.data as Vehicle);
-    } catch {
+    } catch (error) {
+      console.log(error);
       setVehicle(undefined);
     } finally {
       setLoading(false);
@@ -85,6 +88,10 @@ export default function VehicleInformation() {
       fetchVehicleViolation();
     }
   }, [vehicle, fetchVehicleViolation]);
+
+  useEffect(() => {
+    console.log("Loading", loading);
+  }, [loading]);
 
   const handleRefresh = useCallback(() => {
     setRefreshing(true);

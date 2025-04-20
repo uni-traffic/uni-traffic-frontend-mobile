@@ -105,8 +105,8 @@ const getFormattedStatus = (rawStatus: string): string => {
     case "PENDING_FOR_SECURITY_APPROVAL":
       status = "Pending for Security Approval";
       break;
-    case "DENIED":
-      status = "Denied";
+    case "REJECTED":
+      status = "Rejected";
       break;
     default:
       status = "Unknown";

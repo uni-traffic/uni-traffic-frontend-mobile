@@ -31,6 +31,13 @@ export interface Vehicle {
   owner: User | null;
 }
 
+export interface GetVehicleResponse {
+  vehicles: Vehicle[];
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  totalPages: number;
+}
+
 export interface Violation {
   id: string;
   category: string;

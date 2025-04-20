@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 5,
     padding: 10
   },
   card: {
@@ -183,8 +182,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    marginBottom: 100,
-    minHeight: 60
+    minHeight: 60,
+    marginBottom: 20
   },
   violationInfo: {
     flex: 1,
