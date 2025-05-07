@@ -1,15 +1,15 @@
-import api from "@/api/axios";
-import { Loading } from "@/components/loading";
-import { VehicleDetails } from "@/components/vehicle/vehicle-details";
-import { VehicleNotFound } from "@/components/vehicle/vehicle-not-found";
-import { VehicleOwner } from "@/components/vehicle/vehicle-owner";
-import { Violation } from "@/components/vehicle/violation";
+import { Loading } from "@/components/Loading";
+import { OwnerCard } from "@/components/vehicle/OwnerCard";
+import { VehicleCard } from "@/components/vehicle/VehicleCard";
+import { VehicleNotFound } from "@/components/vehicle/VehicleNotFound";
+import { ViolationsCard } from "@/components/vehicle/ViolationsCard";
+import { useAuth } from "@/context/AuthContext";
+import { useVehicles } from "@/hooks/vehicle/useVehicles";
+import { useViolationRecords } from "@/hooks/violationRecord/useViolationRecords";
 import type { Vehicle, ViolationRecord } from "@/lib/types";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import type { AxiosError } from "axios";
 import { useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
-import { useCallback, useEffect, useState } from "react";
 import {
   Image,
   RefreshControl,
@@ -20,90 +20,45 @@ import {
   View
 } from "react-native";
 
-export default function VehicleInformation() {
+export default function VehiclePage() {
+  const { user } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [vehicle, setVehicle] = useState<Vehicle | undefined>();
-  const [violationHistory, setViolationHistory] = useState<ViolationRecord[]>([]);
-  const [refreshing, setRefreshing] = useState(false); // Add state for refresh
+  const { id, licensePlate, stickerNumber, ownerId } = useGlobalSearchParams();
 
-  const queryParams = useGlobalSearchParams();
+  const {
+    data: vehicleFetchResponse,
+    refetch: vehicleRefetch,
+    isLoading: isVehicleFetching,
+    isRefetching: isVehicleRefetching
+  } = useVehicles({
+    id: id as string | undefined,
+    ownerId: ownerId as string | undefined,
+    page: 1,
+    count: 1
+  });
 
-  const getVehicle = useCallback(async () => {
-    console.log("Fetching vehicle");
-    setLoading(true);
+  const {
+    data: violationResponse,
+    refetch: refetchViolations,
+    isLoading: isViolationsFetching,
+    isRefetching: isViolationRefetching
+  } = useViolationRecords({
+    vehicleId: id as string | undefined,
+    userId: ownerId as string | undefined,
+    count: 50,
+    page: 1
+  });
 
-    try {
-      const response = await api.get("/vehicle", {
-        params: {
-          id: queryParams.id,
-          licensePlate: queryParams.licensePlate,
-          stickerNumber: queryParams.stickerNumber
-        }
-      });
-      if (response.status !== 200) {
-        console.error("Unknown response");
-        return;
-      }
-      console.log("Response", response);
+  const vehicle: Vehicle | undefined = vehicleFetchResponse?.vehicles[0] ?? undefined;
+  const violationHistory: ViolationRecord[] = violationResponse?.violation ?? [];
+  const isLoading = isVehicleFetching || isViolationsFetching;
+  const isRefetching = isVehicleRefetching || isViolationRefetching;
 
-      setVehicle(response.data as Vehicle);
-    } catch (error) {
-      console.log(error);
-      setVehicle(undefined);
-    } finally {
-      setLoading(false);
-    }
-  }, [queryParams.id, queryParams.licensePlate, queryParams.stickerNumber]);
-
-  const fetchVehicleViolation = useCallback(async () => {
-    if (!vehicle?.licensePlate) {
-      return;
-    }
-
-    try {
-      const response = await api.get("/violation-record/search", {
-        params: {
-          vehicleId: vehicle?.id
-        }
-      });
-      if (response.status !== 200 || response.data.length === 0) {
-        console.error("Unknown response");
-        return;
-      }
-
-      setViolationHistory(response.data as ViolationRecord[]);
-    } catch (err) {
-      const error = err as AxiosError;
-      console.log(error.response?.data);
-    }
-  }, [vehicle?.id, vehicle?.licensePlate]);
-
-  useEffect(() => {
-    getVehicle();
-  }, [getVehicle]);
-
-  useEffect(() => {
-    if (vehicle) {
-      fetchVehicleViolation();
-    }
-  }, [vehicle, fetchVehicleViolation]);
-
-  useEffect(() => {
-    console.log("Loading", loading);
-  }, [loading]);
-
-  const handleRefresh = useCallback(() => {
-    setRefreshing(true);
-    getVehicle();
-    fetchVehicleViolation().finally(() => setRefreshing(false));
-  }, [fetchVehicleViolation, getVehicle]);
-
-  if (!queryParams.id && !queryParams.licensePlate && !queryParams.stickerNumber) {
+  if (!id && !licensePlate && !stickerNumber) {
     return <VehicleNotFound />;
   }
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -115,30 +70,40 @@ export default function VehicleInformation() {
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       style={styles.scrollView}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetching}
+          onRefresh={() => {
+            vehicleRefetch();
+            refetchViolations();
+          }}
+        />
+      }
     >
       <View style={styles.headerContainer}>
         <View style={styles.textContainer}>
           <Image style={styles.logo} source={require("../../assets/images/neu-logo.png")} />
         </View>
-        <View style={styles.textContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              router.push(
-                `/violation?licensePlate=${vehicle!.licensePlate}&stickerNumber=${vehicle!.stickerNumber}`
-              )
-            }
-          >
-            <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
-            <Text style={styles.buttonText}>New Violation</Text>
-          </TouchableOpacity>
-        </View>
+        {user?.role === "SECURITY" ? (
+          <View style={styles.textContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                router.push(
+                  `/violation?licensePlate=${vehicle!.licensePlate}&stickerNumber=${vehicle!.stickerNumber}`
+                )
+              }
+            >
+              <FontAwesome name="file-text-o" size={16} color="black" style={styles.buttonIcon} />
+              <Text style={styles.buttonText}>New Violation</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
       <View style={styles.container}>
-        <VehicleDetails vehicle={vehicle} />
-        <VehicleOwner owner={vehicle.owner!} />
-        <Violation violations={violationHistory} />
+        <VehicleCard vehicle={vehicle} />
+        <OwnerCard owner={vehicle.owner!} />
+        <ViolationsCard violations={violationHistory} />
       </View>
     </ScrollView>
   );
@@ -186,17 +151,15 @@ const styles = StyleSheet.create({
   logo: {
     height: 60,
     width: 60
-    // marginLeft: 12
   },
   textContainer: {
     height: "100%",
-    // marginLeft: 12,
     justifyContent: "center"
   },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
+    paddingHorizontal: 25,
     height: 100,
     width: "100%",
     backgroundColor: "black"

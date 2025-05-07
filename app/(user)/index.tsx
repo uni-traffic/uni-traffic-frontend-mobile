@@ -1,8 +1,8 @@
 import { View } from "@/components/Themed";
-import { AdminDashboard } from "@/components/admin/dashboard";
-import { GuestDashboard } from "@/components/user/guest/guestDashboard";
-import { UserDashboard } from "@/components/user/normal/dashboard";
-import { useAuth } from "@/context/authContext";
+import { AdminDashboard } from "@/components/dashboard/AdminDashboard";
+import { GuestDashboard } from "@/components/dashboard/GuestDashboard";
+import { VerifiedUserDashboard } from "@/components/dashboard/VerifiedUserDashboard";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { StyleSheet } from "react-native";
 
@@ -16,10 +16,10 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      {user?.role === "ADMIN" || user?.role === "SUPERADMIN" ? (
+      {user?.role === "ADMIN" || user?.role === "SUPERADMIN" || user?.role === "CASHIER" ? (
         <AdminDashboard />
       ) : user?.role === "STUDENT" || user?.role === "STAFF" ? (
-        <UserDashboard />
+        <VerifiedUserDashboard />
       ) : (
         <GuestDashboard />
       )}

@@ -1,18 +1,17 @@
-import api from "@/api/axios";
-import { DriverForm } from "@/components/user/guest/driver-info-form";
-import { SchoolMemberInformationForm } from "@/components/user/guest/school-member-form";
-import { VehicleForm } from "@/components/user/guest/vehicle-info-form";
-import type { AxiosError } from "axios";
+import { DriverForm } from "@/components/vehicleApplication/DriverForm";
+import { SchoolMemberInformationForm } from "@/components/vehicleApplication/SchoolMemberForm";
+import { VehicleForm } from "@/components/vehicleApplication/VehicleForm";
+import { useCreateVehicleApplication } from "@/hooks/vehicleApplication/useCreateVehicleApplication";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native";
 
-export interface SchoolMemberForm {
+export interface SchoolMemberDetailsForm {
   schoolId: string;
   firstName: string;
   lastName: string;
-  useType: string;
+  userType: string;
   schoolCredential: string;
 }
 
@@ -65,13 +64,11 @@ const validationMessages = {
 };
 
 export default function Register() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [schoolMember, setSchoolMember] = useState<SchoolMemberForm>({
+  const [schoolMember, setSchoolMember] = useState<SchoolMemberDetailsForm>({
     schoolId: "",
     firstName: "",
     lastName: "",
-    useType: "",
+    userType: "",
     schoolCredential: ""
   });
   const [driverDetails, setDriverDetails] = useState<DriverDetailsForm>({
@@ -95,41 +92,49 @@ export default function Register() {
 
   const validateValues = () => {
     for (const key in schoolMember) {
-      if (schoolMember[key as keyof SchoolMemberForm] === "") {
+      const value = schoolMember[key as keyof SchoolMemberDetailsForm];
+      if (!value || value === "") {
         alert(validationMessages.schoolMember[key as keyof typeof validationMessages.schoolMember]);
-        return;
+        return false;
       }
     }
 
     for (const key in driverDetails) {
-      if (driverDetails[key as keyof DriverDetailsForm] === "") {
+      const value = driverDetails[key as keyof DriverDetailsForm];
+      if (!value || value === "") {
         alert(
           validationMessages.driverDetails[key as keyof typeof validationMessages.driverDetails]
         );
-        return;
+        return false;
       }
     }
 
     for (const key in vehicleDetails) {
-      if (vehicleDetails[key as keyof VehicleDetailsForm] === "") {
+      const value = vehicleDetails[key as keyof VehicleDetailsForm];
+      if (!value || value === "") {
         alert(
           validationMessages.vehicleDetails[key as keyof typeof validationMessages.vehicleDetails]
         );
-        return;
+        return false;
       }
     }
+
+    return true;
   };
 
+  const { mutate: createVehicleApplication, isPending: isLoading } = useCreateVehicleApplication();
   const handleSubmit = async () => {
-    validateValues();
+    const isFormValid = validateValues();
+    if (!isFormValid) {
+      return;
+    }
 
-    setIsLoading(true);
-    try {
-      const response = await api.post("/vehicle-application/create", {
+    createVehicleApplication(
+      {
         schoolId: schoolMember.schoolId,
         firstName: schoolMember.firstName,
         lastName: schoolMember.lastName,
-        userType: schoolMember.useType,
+        userType: schoolMember.userType as "STUDENT" | "STAFF",
         schoolCredential: schoolMember.schoolCredential,
 
         driverFirstName: driverDetails.firstName,
@@ -147,25 +152,21 @@ export default function Register() {
         frontImage: vehicleDetails.frontImage,
         backImage: vehicleDetails.backImage,
         sideImage: vehicleDetails.sideImage
-      });
-      if (response.status !== 201) return;
-
-      alert("Application Submitted Successfully");
-      router.replace("/(user)");
-    } catch (err) {
-      const error = err as AxiosError;
-
-      alert(
-        (error.response?.data as { message: string | undefined })?.message ??
-          "Something went wrong please try again later"
-      );
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      {
+        onSuccess: () => {
+          alert("Vehicle Application Submitted Successfully");
+          router.replace("/(user)");
+        },
+        onError: (error) => {
+          alert(`Failed to submit vehicle application: ${(error as Error).message}`);
+        }
+      }
+    );
   };
 
   const handleCancel = () => {
-    router.push("/(user)");
+    router.back();
   };
 
   return (
@@ -255,11 +256,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12
-  },
-  title: {
-    fontSize: 25,
-    alignSelf: "flex-start",
-    padding: 10
   },
   headerText: {
     color: "white",

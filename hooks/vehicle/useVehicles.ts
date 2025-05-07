@@ -1,5 +1,6 @@
 import { getVehicles } from "@/api/request/vehicle/getVehicles";
-import { useQuery } from "@tanstack/react-query";
+import type { GetVehicleResponse } from "@/lib/types";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export const useVehicles = ({
   id,
@@ -19,7 +20,7 @@ export const useVehicles = ({
   searchKey?: string;
   count: number;
   page: number;
-}) => {
+}): UseQueryResult<GetVehicleResponse> => {
   return useQuery({
     queryKey: ["vehicles", id, ownerId, licensePlate, stickerNumber, sort, searchKey, count, page],
     queryFn: () =>

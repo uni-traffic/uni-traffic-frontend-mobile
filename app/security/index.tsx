@@ -1,8 +1,7 @@
-import SecurityDashboard from "@/components/security/dashboard";
-import { useAuth } from "@/context/authContext";
+import SecurityDashboard from "@/components/dashboard/SecurityDashboard";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
-import { StyleSheet } from "react-native";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -13,16 +12,12 @@ export default function Dashboard() {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flex: 1
+      }}
+    >
       <SecurityDashboard />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});

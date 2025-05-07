@@ -1,4 +1,5 @@
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -12,13 +13,22 @@ import {
 import { StyleSheet } from "react-native";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { user, login, signInWithGoogle, error, isLoading } = useAuth();
+  const [form, setForm] = useState({ username: "", password: "" });
 
-  const { login, signInWithGoogle, error, isLoading } = useAuth();
-  const handleLogin = async () => {
-    await login(username, password);
+  const handleChange = (key: string, value: string) => {
+    setForm((prevForm) => ({ ...prevForm, [key]: value }));
   };
+
+  const handleLogin = async () => {
+    await login(form.username, form.password);
+  };
+
+  if (user) {
+    router.replace(user.role === "SECURITY" ? "/security" : "/(user)");
+    return;
+  }
 
   return (
     <ImageBackground style={newStyles.main} source={require("../../assets/images/neu-camp.png")}>
@@ -55,23 +65,23 @@ export default function Login() {
           </View>
           {error ? (
             <View style={newStyles.errorContainer}>
-              <Text style={newStyles.errorMessage}>Something went wrong</Text>
+              <Text style={newStyles.errorMessage}>{error ? error : "Something went wrong"}</Text>
             </View>
           ) : null}
           <View style={newStyles.formSection}>
             <TextInput
               style={newStyles.formTextInput}
               placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
+              value={form.username}
+              onChangeText={(text) => handleChange("username", text)}
             />
           </View>
           <View style={newStyles.formSection}>
             <TextInput
               style={newStyles.formTextInput}
               placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
+              value={form.password}
+              onChangeText={(text) => handleChange("password", text)}
               secureTextEntry={true}
             />
           </View>
@@ -205,10 +215,6 @@ const newStyles = StyleSheet.create({
     borderRadius: 5,
     color: "rgb(128, 40, 40)",
     backgroundColor: "rgba(253, 140, 140, 0.9)"
-  },
-  formContainer: {
-    flex: 1,
-    alignItems: "center"
   },
   formSection: {
     width: "100%",
