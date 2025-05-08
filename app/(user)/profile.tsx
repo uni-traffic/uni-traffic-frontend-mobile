@@ -1,9 +1,9 @@
-import { ApplicationsTab } from "@/components/profile/applications-tab";
-import { ProfileHeader } from "@/components/profile/profile-header";
-import { ProfileTabs } from "@/components/profile/profile-tabs";
-import { VehicleTab } from "@/components/profile/vehicle-tab";
-import { ViolationsTab } from "@/components/profile/violations-tab";
-import { useAuth } from "@/context/authContext";
+import { ProfileHeader } from "@/components/profile/header/ProfileHeader";
+import { TabController } from "@/components/profile/header/TabController";
+import { VehicleApplicationsTab } from "@/components/profile/tabs/VehicleApplicationsTab";
+import { VehiclesTab } from "@/components/profile/tabs/VehiclesTab";
+import { ViolationsRecordTab } from "@/components/profile/tabs/ViolationsRecordTab";
+import { useAuth } from "@/context/AuthContext";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import { Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -26,16 +26,16 @@ export default function Profile() {
         </View>
 
         <View style={styles.tabHeader}>
-          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <TabController activeTab={activeTab} onTabChange={setActiveTab} />
           <TouchableOpacity onPress={() => setMenuVisible(!menuVisible)} style={styles.menuButton}>
             <Entypo name="log-out" size={20} color="#000000" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.content}>
-          {activeTab === "Vehicles" && <VehicleTab />}
-          {activeTab === "Violations" && <ViolationsTab />}
-          {activeTab === "Applications" && <ApplicationsTab />}
+          {activeTab === "Vehicles" && <VehiclesTab />}
+          {activeTab === "Violations" && <ViolationsRecordTab />}
+          {activeTab === "Applications" && <VehicleApplicationsTab />}
         </View>
       </SafeAreaView>
       <Modal

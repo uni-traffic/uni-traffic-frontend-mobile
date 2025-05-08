@@ -1,11 +1,9 @@
-import api from "@/api/axios";
-import { VehicleStickerApplicationModal } from "@/components/user/guest/application-modal";
-import { useAuth } from "@/context/authContext";
+import { VehicleStickerApplicationModal } from "@/components/common/ApplicationModal";
+import { VehicleApplicationCard } from "@/components/common/VehicleApplicationCard";
+import { useAuth } from "@/context/AuthContext";
+import { useVehicleApplications } from "@/hooks/vehicleApplication/useVehicleApplications";
 import type { VehicleApplication } from "@/lib/types";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import type { AxiosError } from "axios";
-import { format } from "date-fns";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -14,7 +12,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from "react-native";
 
@@ -22,47 +19,28 @@ export default function Application() {
   const { user } = useAuth();
   const [isVisible, setIsModalVisible] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<VehicleApplication | null>(null);
-  const [vehicleApplication, setVehicleApplication] = useState<VehicleApplication[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const fetchVehicleStickerApplication = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await api.get("/vehicle-application/search", {
-        params: {
-          applicantId: user?.id,
-          count: 25,
-          page: 1
-        }
-      });
-      if (response.status !== 200 || !response.data) {
-        return;
-      }
+  const {
+    data: vehicleApplicationsData,
+    refetch: vehicleApplicationRefetch,
+    isRefetching: refreshing,
+    isLoading: loading
+  } = useVehicleApplications({
+    count: 10,
+    page: 1,
+    applicantId: user?.id
+  });
 
-      setVehicleApplication(response.data as VehicleApplication[]);
-    } catch (err) {
-      const error = err as AxiosError;
-
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id]);
-
-  useEffect(() => {
-    fetchVehicleStickerApplication();
-  }, [fetchVehicleStickerApplication]);
+  const vehicleApplications = vehicleApplicationsData?.vehicleApplication ?? [];
 
   const openModal = (application: VehicleApplication) => {
     setSelectedApplication(application);
     setIsModalVisible(true);
   };
 
-  const handleRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchVehicleStickerApplication().finally(() => setRefreshing(false));
-  }, [fetchVehicleStickerApplication]);
+  const handleRefresh = useCallback(async () => {
+    await vehicleApplicationRefetch();
+  }, [vehicleApplicationRefetch]);
 
   return (
     <ScrollView
@@ -77,41 +55,26 @@ export default function Application() {
           </View>
         </View>
       </View>
-      {vehicleApplication.length > 0 ? (
+      {vehicleApplications.length > 0 ? (
         <View style={styles.violationContainer}>
-          <View style={styles.violationBox}>
-            {vehicleApplication.map((item) => {
-              return (
-                <TouchableOpacity onPress={() => openModal(item)} key={item.id}>
-                  <View style={styles.violationIcon}>
-                    <MaterialCommunityIcons
-                      style={styles.icon}
-                      name="sticker-text-outline"
-                      size={24}
-                      color="black"
-                    />
-                    <View style={styles.violationInfo}>
-                      <Text style={styles.violation}>{item.id}</Text>
-                      <Text style={styles.label}>
-                        {format(new Date(item.createdAt).toString(), "MMMM dd yyyy")}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-            <Modal
-              transparent={true}
-              visible={isVisible}
-              onRequestClose={() => setIsModalVisible(false)}
-              animationType="fade"
-            >
-              <VehicleStickerApplicationModal
-                closeModal={() => setIsModalVisible(false)}
-                vehicleApplication={selectedApplication!}
-              />
-            </Modal>
-          </View>
+          {vehicleApplications.map((item) => (
+            <VehicleApplicationCard
+              key={item.id}
+              vehicleApplication={item}
+              onPress={() => openModal(item)}
+            />
+          ))}
+          <Modal
+            transparent={true}
+            visible={isVisible}
+            onRequestClose={() => setIsModalVisible(false)}
+            animationType="fade"
+          >
+            <VehicleStickerApplicationModal
+              closeModal={() => setIsModalVisible(false)}
+              vehicleApplication={selectedApplication!}
+            />
+          </Modal>
         </View>
       ) : !loading ? (
         <View style={styles.violationContainer}>
@@ -123,7 +86,6 @@ export default function Application() {
         <View style={styles.violationContainer}>
           <View style={styles.loadingContainer}>
             <ActivityIndicator size={"large"} color="black" />
-            <Text>Fetching Data</Text>
           </View>
         </View>
       )}
@@ -186,7 +148,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 20
+    paddingVertical: 10,
+    paddingHorizontal: 20
   },
   violationIcon: {
     flexDirection: "row",

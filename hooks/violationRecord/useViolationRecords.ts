@@ -1,5 +1,6 @@
 import { getViolationRecords } from "@/api/request/violationRecord/getViolationRecords";
-import { useQuery } from "@tanstack/react-query";
+import type { GetViolationRecordResponse } from "@/lib/types";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export const useViolationRecords = ({
   id,
@@ -19,7 +20,7 @@ export const useViolationRecords = ({
   status?: "UNPAID" | "PAID";
   count?: number;
   page?: number;
-}) => {
+}): UseQueryResult<GetViolationRecordResponse> => {
   return useQuery({
     queryKey: [
       "violationRecords",
@@ -42,17 +43,6 @@ export const useViolationRecords = ({
         status,
         count,
         page
-      }),
-    staleTime: 60 * 1000,
-    enabled: !!(
-      id ||
-      vehicleId ||
-      userId ||
-      violationId ||
-      reportedById ||
-      status ||
-      count !== undefined ||
-      page !== undefined
-    )
+      })
   });
 };

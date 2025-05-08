@@ -107,3 +107,38 @@ export interface VehicleApplication {
   applicantId: string;
   applicant?: User;
 }
+
+export interface GetVehicleApplicationResponse {
+  vehicleApplication: VehicleApplication[];
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  totalPages: number;
+}
+
+export interface GetViolationResponse {
+  violation: Violation[];
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  totalPages: number;
+  isDeleted: boolean;
+}
+
+export interface GetVehicleResponse {
+  vehicles: Vehicle[];
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  totalPages: number;
+}
+
+export interface GetViolationRecordResponse {
+  violation: ViolationRecord[];
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  totalPages: number;
+}
+
+export interface UserLoginResponse {
+  user: User;
+  appKey: string;
+  accessToken: string;
+}

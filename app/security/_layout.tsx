@@ -1,7 +1,6 @@
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { useAuth } from "@/context/authContext";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs, useRouter } from "expo-router";
@@ -10,17 +9,13 @@ import { Pressable, TouchableOpacity, View } from "react-native";
 export default function TabLayout() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { user } = useAuth();
 
   return (
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          position: "absolute",
-          left: 16,
-          right: 16,
+          position: "relative",
           height: 72,
-          elevation: 0,
           backgroundColor: "black",
           alignItems: "center",
           justifyContent: "center",

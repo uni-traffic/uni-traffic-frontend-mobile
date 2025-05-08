@@ -1,7 +1,7 @@
-import api from "@/api/axios";
-import ViolationSelect from "@/components/security/violation-select";
-import { useAuth } from "@/context/authContext";
-import type { AxiosError, AxiosResponse } from "axios";
+import ViolationSelect from "@/components/issueViolation/ViolationSelect";
+import { useAuth } from "@/context/AuthContext";
+import { useCreateViolationRecord } from "@/hooks/violationRecord/useCreateViolationRecord";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigation, useRouter } from "expo-router";
 import { useGlobalSearchParams } from "expo-router/build/hooks";
 import { defaultTo } from "rambda";
@@ -18,6 +18,7 @@ import {
 import { StyleSheet } from "react-native";
 
 export default function Violation() {
+  const queryClient = useQueryClient();
   const queryParams = useGlobalSearchParams();
   const [licensePlate, setLicensePlate] = useState<string>(
     defaultTo("", queryParams.licensePlate as string)
@@ -27,7 +28,8 @@ export default function Violation() {
   );
   const [violation, setViolation] = useState("");
   const [remarks, setRemarks] = useState("");
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const { mutate: submitViolationRecord, isPending: loading } = useCreateViolationRecord();
 
   const { user } = useAuth();
   const navigation = useNavigation();
@@ -53,28 +55,25 @@ export default function Violation() {
       return;
     }
 
-    try {
-      setLoading(true);
-      const response: AxiosResponse = await api.post("/violation-record/create", {
-        vehicleId: queryParams.vehicleId,
+    submitViolationRecord(
+      {
+        vehicleId: queryParams.vehicleId as string | undefined,
         licensePlate: licensePlate ? licensePlate.replace(" ", "") : undefined,
         stickerNumber: stickerNumber,
         violationId: violation,
         remarks: remarks
-      });
-
-      if (response.status === 201) {
-        alert("Violation Submitted");
-        router.replace(`/vehicle?stickerNumber=${stickerNumber}`);
+      },
+      {
+        onSuccess: () => {
+          alert("Violation Submitted");
+          queryClient.invalidateQueries({ queryKey: ["violationRecords"] });
+          router.back();
+        },
+        onError: (error) => {
+          alert(`Error occurred submitting violation: \n${error.message}`);
+        }
       }
-    } catch (err) {
-      const error = err as AxiosError;
-      const errorMessage = (error.response?.data as { message: string }).message;
-
-      alert(`Error occurred submitting violation:\n${errorMessage}`);
-    } finally {
-      setLoading(false);
-    }
+    );
   };
 
   const handleCancel = () => {
@@ -140,7 +139,7 @@ export default function Violation() {
           </View>
         </View>
         <View style={styles.interactionButton}>
-          <TouchableOpacity style={styles.button} onPress={handleCancel}>
+          <TouchableOpacity style={styles.button} onPress={handleCancel} disabled={loading}>
             <Text style={styles.btnLabel}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity

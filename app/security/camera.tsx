@@ -1,5 +1,5 @@
-import PhotoPreview from "@/components/security/photoPreview";
-import { useAuth } from "@/context/authContext";
+import { PhotoPreview } from "@/components/common/PhotoPreview";
+import { useAuth } from "@/context/AuthContext";
 import {
   type CameraCapturedPicture,
   type CameraType,
@@ -147,42 +147,14 @@ const newStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  cover: {
-    flex: 1,
-    backgroundColor: "black",
-    opacity: 0.5
-  },
   message: {
     textAlign: "center",
     paddingBottom: 10
-  },
-  label: {
-    fontSize: 15,
-    color: "white",
-    textAlign: "center"
   },
   messageContainer: {
     flex: 1,
     justifyContent: "center",
     alignContent: "center"
-  },
-  buttonContainer: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -138 }, { translateY: -30 }],
-    flexDirection: "row",
-    width: "70%",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "black",
-    opacity: 0.5
-  },
-  button: {
-    width: 60,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center"
   },
   cornerDash: {
     position: "absolute",
