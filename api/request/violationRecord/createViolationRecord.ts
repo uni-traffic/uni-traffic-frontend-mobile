@@ -6,6 +6,7 @@ export const createViolationRecord = async (payload: {
   vehicleId?: string;
   licensePlate?: string;
   stickerNumber?: string;
+  evidence: string[];
   remarks?: string;
 }) => {
   try {

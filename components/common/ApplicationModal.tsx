@@ -1,3 +1,4 @@
+import { ImageContainer } from "@/components/common/ImageContainer";
 import type { VehicleApplication } from "@/lib/types";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -51,8 +52,12 @@ export const VehicleStickerApplicationModal = ({
           <PropertyValue label={"Last Name:"} value={vehicleApplication.driver.lastName} />
 
           <ImageProperty
-            label={"School Credential License: "}
+            label={"Driver's License: "}
             image={vehicleApplication.driver.licenseImage}
+          />
+          <ImageProperty
+            label={"Driver's Selfie Picture: "}
+            image={vehicleApplication.driver.selfiePicture}
           />
         </View>
 
@@ -199,9 +204,7 @@ const ImageProperty = ({ label, image }: { image: string; label: string }) => {
   return (
     <View style={subStyle.imageProperty}>
       <Text style={subStyle.label}>{label}</Text>
-      <View style={subStyle.imageHolder}>
-        <Image source={{ uri: image }} style={subStyle.uploadedImage} />
-      </View>
+      <ImageContainer image={image} />
     </View>
   );
 };
@@ -217,7 +220,8 @@ const PropertyValue = ({ label, value }: { label: string; value: string }) => {
 
 const subStyle = StyleSheet.create({
   imageProperty: {
-    marginBottom: 10
+    width: "100%",
+    marginTop: 5
   },
   label: {
     marginBottom: 10,
@@ -230,7 +234,6 @@ const subStyle = StyleSheet.create({
     justifyContent: "space-between"
   },
   imageHolder: {
-    padding: 4,
     borderRadius: 8,
     borderWidth: 1,
     width: "100%",
@@ -239,7 +242,7 @@ const subStyle = StyleSheet.create({
     maxHeight: 200
   },
   uploadedImage: {
-    width: "60%",
+    width: "100%",
     height: "100%",
     borderRadius: 5,
     resizeMode: "contain"

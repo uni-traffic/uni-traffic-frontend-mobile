@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 2
+    shadowRadius: 2,
+    marginBottom: 5
   },
   headerRow: {
     flexDirection: "row",

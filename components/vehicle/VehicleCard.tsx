@@ -1,3 +1,5 @@
+import { CardDataRow } from "@/components/common/CardDataRow";
+import { NeuImage } from "@/components/common/NeuImage";
 import type { Vehicle } from "@/lib/types";
 import { FontAwesome, Fontisto } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
@@ -20,34 +22,75 @@ export const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
         </View>
 
         {/* Vehicle details body */}
-        <VehicleInfoBody title="Type" value={vehicle.type} />
-        <VehicleInfoBody title="Make" value={vehicle.make} />
-        <VehicleInfoBody title="Series" value={vehicle.series} />
-        <VehicleInfoBody title="Model" value={vehicle.model} />
-        <VehicleInfoBody title="License Plate" value={vehicle.licensePlate} />
-        <VehicleInfoBody title="Sticker Number" value={vehicle.stickerNumber} />
+        <CardDataRow title="Type" value={vehicle.type} />
+        <CardDataRow title="Make" value={vehicle.make} />
+        <CardDataRow title="Series" value={vehicle.series} />
+        <CardDataRow title="Model" value={vehicle.model} />
+        <CardDataRow title="License Plate" value={vehicle.licensePlate} />
+        <CardDataRow title="Sticker Number" value={vehicle.stickerNumber} />
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 10,
+            paddingTop: 5
+          }}
+        >
+          <Text style={styles.titleBody}>Vehicle Images</Text>
+          <View
+            style={{
+              height: 150,
+              width: "100%",
+              flexDirection: "row",
+              marginTop: 5,
+              paddingBottom: 5
+            }}
+          >
+            <View style={{ flex: 1, marginRight: 2 }}>
+              <NeuImage image={vehicle.images.front} cover={true} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, marginBottom: 3 }}>
+                <NeuImage image={vehicle.images.side} cover={true} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <NeuImage image={vehicle.images.back} cover={true} />
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 10,
+            paddingTop: 5
+          }}
+        >
+          <Text style={styles.titleBody}>Documents</Text>
+          <View
+            style={{
+              height: 150,
+              width: "100%",
+              flexDirection: "row",
+              marginTop: 5,
+              paddingBottom: 5
+            }}
+          >
+            <View style={{ flex: 1, marginRight: 2 }}>
+              <NeuImage image={vehicle.images.registration} cover={true} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <NeuImage image={vehicle.images.receipt} cover={true} />
+            </View>
+          </View>
+        </View>
       </View>
     </>
-  );
-};
-
-const VehicleInfoBody = ({ title, value }: { title: string; value: string | number }) => {
-  return (
-    <View style={styles.containerInfoBody}>
-      <View style={styles.containerInfoContent}>
-        <Text style={styles.titleBody}>{title}</Text>
-      </View>
-      <View style={styles.containerInfoContent}>
-        <Text style={styles.infoBody}>{value}</Text>
-      </View>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   containerInfo: {
     alignItems: "center",
-    justifyContent: "center",
     width: "95%",
     margin: "2%",
     backgroundColor: "#FFFFFF",
@@ -56,29 +99,20 @@ const styles = StyleSheet.create({
     paddingVertical: "1%"
   },
   containerInfoHeader: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    minHeight: 20,
-    width: "95%",
+    width: "100%",
     backgroundColor: "#EBEAF0",
-    margin: "2%",
-    padding: "3%",
-    borderRadius: 10
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    elevation: 2
   },
   containerInfoContent: {
-    backgroundColor: "transparent",
     flexDirection: "row",
     alignItems: "center"
-  },
-  containerInfoBody: {
-    width: "95%",
-    margin: "2%",
-    padding: "3%",
-    minHeight: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row"
   },
   title: {
     fontSize: 20,
@@ -90,10 +124,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto",
     fontWeight: "bold"
-  },
-  infoBody: {
-    fontSize: 16,
-    fontFamily: "Roboto",
-    fontWeight: "400"
   }
 });

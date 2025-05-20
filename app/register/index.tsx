@@ -20,6 +20,7 @@ export interface DriverDetailsForm {
   lastName: string;
   licenseId: string;
   licenseImage: string;
+  driverSelfiePicture: string;
 }
 
 export interface VehicleDetailsForm {
@@ -75,7 +76,8 @@ export default function Register() {
     firstName: "",
     lastName: "",
     licenseId: "",
-    licenseImage: ""
+    licenseImage: "",
+    driverSelfiePicture: ""
   });
   const [vehicleDetails, setVehicleDetails] = useState<VehicleDetailsForm>({
     make: "",
@@ -141,6 +143,7 @@ export default function Register() {
         driverLastName: driverDetails.lastName,
         driverLicenseId: driverDetails.licenseId,
         driverLicenseImage: driverDetails.licenseImage,
+        driverSelfiePicture: driverDetails.driverSelfiePicture,
 
         make: vehicleDetails.make,
         series: vehicleDetails.series,
@@ -159,7 +162,7 @@ export default function Register() {
           router.replace("/(user)");
         },
         onError: (error) => {
-          alert(`Failed to submit vehicle application: ${(error as Error).message}`);
+          alert(`Failed to submit vehicle application: ${error.message}`);
         }
       }
     );
@@ -196,7 +199,7 @@ export default function Register() {
               <VehicleForm setVehicleDetails={setVehicleDetails} />
             </View>
             <View style={styles.btnContainer}>
-              <TouchableOpacity style={styles.button} onPress={handleCancel}>
+              <TouchableOpacity style={styles.button} onPress={handleCancel} disabled={isLoading}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
 

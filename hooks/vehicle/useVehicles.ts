@@ -34,7 +34,7 @@ export const useVehicles = ({
         count,
         page
       }),
-    staleTime: 60 * 1000,
-    enabled: count > 0 && page > 0
+    enabled: count > 0 && page > 0,
+    placeholderData: (prev) => prev
   });
 };

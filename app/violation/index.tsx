@@ -1,3 +1,4 @@
+import { CameraPicker } from "@/components/common/CameraPicker";
 import ViolationSelect from "@/components/issueViolation/ViolationSelect";
 import { useAuth } from "@/context/AuthContext";
 import { useCreateViolationRecord } from "@/hooks/violationRecord/useCreateViolationRecord";
@@ -10,6 +11,7 @@ import {
   ActivityIndicator,
   Image,
   Keyboard,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -28,6 +30,7 @@ export default function Violation() {
   );
   const [violation, setViolation] = useState("");
   const [remarks, setRemarks] = useState("");
+  const [evidence, setEvidence] = useState<string[]>([]);
 
   const { mutate: submitViolationRecord, isPending: loading } = useCreateViolationRecord();
 
@@ -55,13 +58,19 @@ export default function Violation() {
       return;
     }
 
+    if (evidence.length < 1) {
+      alert("You must provide at least 1 evidence.");
+      return;
+    }
+
     submitViolationRecord(
       {
         vehicleId: queryParams.vehicleId as string | undefined,
         licensePlate: licensePlate ? licensePlate.replace(" ", "") : undefined,
         stickerNumber: stickerNumber,
         violationId: violation,
-        remarks: remarks
+        remarks: remarks,
+        evidence: evidence
       },
       {
         onSuccess: () => {
@@ -90,10 +99,13 @@ export default function Violation() {
           </View>
         </View>
       </View>
-      <View style={styles.section}>
+      <ScrollView contentContainerStyle={styles.section}>
         <View style={styles.sectionContainer}>
           <View style={styles.container}>
-            <Text style={styles.label}>License Plate</Text>
+            <View style={{ alignSelf: "flex-start", flexDirection: "row" }}>
+              <Text style={styles.label}>License Plate</Text>
+              <Text style={[styles.textMuted, { color: "red" }]}>(Required)</Text>
+            </View>
             <View style={styles.box}>
               <TextInput
                 style={styles.input}
@@ -104,7 +116,10 @@ export default function Violation() {
             </View>
           </View>
           <View style={styles.container}>
-            <Text style={styles.label}>Sticker Number</Text>
+            <View style={{ alignSelf: "flex-start", flexDirection: "row" }}>
+              <Text style={styles.label}>Sticker Number</Text>
+              <Text style={[styles.textMuted, { color: "red" }]}>(Required)</Text>
+            </View>
             <View style={styles.box}>
               <TextInput
                 style={styles.input}
@@ -124,7 +139,34 @@ export default function Violation() {
           </View>
 
           <View style={styles.container}>
-            <Text style={styles.label}>Remarks (Optional)</Text>
+            <View style={{ alignSelf: "flex-start", flexDirection: "row" }}>
+              <Text style={styles.label}>Evidence 1</Text>
+              <Text style={[styles.textMuted, { color: "red" }]}>(Required)</Text>
+            </View>
+            <View style={styles.box}>
+              <CameraPicker
+                setUploadedImageUrl={(image) => setEvidence((prevState) => [...prevState, image])}
+              />
+            </View>
+          </View>
+
+          <View style={styles.container}>
+            <View style={{ alignSelf: "flex-start", flexDirection: "row" }}>
+              <Text style={styles.label}>Evidence 2</Text>
+              <Text style={styles.textMuted}>(Optional)</Text>
+            </View>
+            <View style={styles.box}>
+              <CameraPicker
+                setUploadedImageUrl={(image) => setEvidence((prevState) => [...prevState, image])}
+              />
+            </View>
+          </View>
+
+          <View style={styles.container}>
+            <View style={{ alignSelf: "flex-start", flexDirection: "row" }}>
+              <Text style={styles.label}>Remarks</Text>
+              <Text style={styles.textMuted}>(Optional)</Text>
+            </View>
             <View style={styles.box}>
               <TextInput
                 style={[styles.input, styles.multilineText]}
@@ -154,7 +196,7 @@ export default function Violation() {
             )}
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -179,11 +221,10 @@ const styles = StyleSheet.create({
     marginLeft: 12
   },
   section: {
-    flex: 1,
-    alignItems: "center",
     width: "100%",
-    marginTop: 20,
-    justifyContent: "space-between"
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexGrow: 1
   },
   sectionContainer: {
     justifyContent: "space-between"
@@ -193,6 +234,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 20,
     marginBottom: 10,
     paddingBottom: 5
   },
@@ -237,7 +279,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: "flex-start",
     fontWeight: "bold",
-    marginBottom: 10
+    marginBottom: 10,
+    marginRight: 4
+  },
+  textMuted: {
+    fontSize: 12,
+    fontWeight: "ultralight"
   },
   multilineText: {
     minHeight: 100,

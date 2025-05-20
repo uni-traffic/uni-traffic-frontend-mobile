@@ -12,6 +12,7 @@ export const createVehicleApplication = async (payload: {
   driverLastName: string;
   driverLicenseId: string;
   driverLicenseImage: string;
+  driverSelfiePicture: string;
 
   make: string;
   series: string;

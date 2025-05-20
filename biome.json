@@ -18,6 +18,9 @@
       "correctness": {
         "noUnusedImports": "error",
         "noUnusedVariables": "warn"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
       }
     }
   },

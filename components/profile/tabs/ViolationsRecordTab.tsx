@@ -1,4 +1,4 @@
-import { ViolationCard } from "@/components/common/ViolationCard";
+import { ViolationCollapsible } from "@/components/common/ViolationCollapsible";
 import { useAuth } from "@/context/AuthContext";
 import { useViolationRecords } from "@/hooks/violationRecord/useViolationRecords";
 import type { ViolationRecord } from "@/lib/types";
@@ -37,8 +37,9 @@ export const ViolationsRecordTab = () => {
         <FlatList
           data={violationRecords}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }: { item: ViolationRecord }) => <ViolationCard record={item} />}
-          contentContainerStyle={styles.listContent}
+          renderItem={({ item }: { item: ViolationRecord }) => (
+            <ViolationCollapsible record={item} />
+          )}
           refreshControl={
             <RefreshControl
               refreshing={isRefetching}
@@ -72,9 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#eee",
     padding: 10
-  },
-  listContent: {
-    gap: 12
   },
   emptyState: {
     width: "100%",

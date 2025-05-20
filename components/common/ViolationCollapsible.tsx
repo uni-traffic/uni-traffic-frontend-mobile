@@ -1,3 +1,4 @@
+import { NeuImage } from "@/components/common/NeuImage";
 import type { ViolationRecord } from "@/lib/types";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
@@ -6,7 +7,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 interface ViolationCardProps {
   record: ViolationRecord;
 }
-export const ViolationCard = ({ record }: ViolationCardProps) => {
+export const ViolationCollapsible = ({ record }: ViolationCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const { date, status, violation, reporter, vehicle, remarks } = record;
 
@@ -23,7 +24,6 @@ export const ViolationCard = ({ record }: ViolationCardProps) => {
           <View style={styles.headerLeft}>
             <Feather name="alert-triangle" color="#facc15" size={25} style={styles.icon} />
             <View style={{ width: "100%", paddingRight: 10 }}>
-              {/* How can I truncate this? */}
               <Text style={styles.title} numberOfLines={1}>
                 {violation?.violationName}
               </Text>
@@ -62,9 +62,31 @@ export const ViolationCard = ({ record }: ViolationCardProps) => {
             Reported by: {reporter ? `${reporter.firstName} ${reporter.lastName}` : "Unknown"}
           </Text>
           <Text style={styles.infoText}>
-            Vehicle:{" "}
-            {vehicle ? `${vehicle.make} ${vehicle.model} (${vehicle.licensePlate})` : "Unknown"}
+            Vehicle: {vehicle ? `${vehicle.model} ${vehicle.series} ${vehicle.make} ` : "Unknown"}
           </Text>
+          <Text style={styles.infoText}>
+            License Plate: {`${vehicle?.licensePlate ? vehicle?.licensePlate : "Unknown"}`}
+          </Text>
+
+          <Text style={styles.sectionLabel}>Photos:</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              height: 150,
+              width: "100%",
+              justifyContent: "center"
+            }}
+          >
+            {record.evidence.length > 0
+              ? record.evidence.map((evidence, index) => {
+                  return (
+                    <View style={[{ flex: 1 }, index === 0 && { marginRight: 2 }]} key={index}>
+                      <NeuImage image={evidence} />
+                    </View>
+                  );
+                })
+              : null}
+          </View>
 
           <Text style={styles.sectionLabel}>Remarks:</Text>
           <View style={styles.remarksBox}>
@@ -88,11 +110,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "white",
     borderColor: "#ccc",
-    elevation: 2,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 2
+    shadowRadius: 2,
+    width: "100%",
+    marginBottom: 5
   },
   header: {
     padding: 16,

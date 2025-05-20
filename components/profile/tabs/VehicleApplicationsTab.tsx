@@ -6,14 +6,27 @@ import type { VehicleApplication } from "@/lib/types";
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Modal,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from "react-native";
 
 export const VehicleApplicationsTab = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<VehicleApplication | null>(null);
-  const { data: vehicleApplicationsData, isPending } = useVehicleApplications({
+  const {
+    data: vehicleApplicationsData,
+    refetch,
+    isRefetching,
+    isPending
+  } = useVehicleApplications({
     applicantId: user?.id,
     count: 10,
     page: 1
@@ -36,7 +49,14 @@ export const VehicleApplicationsTab = () => {
             renderItem={({ item }: { item: VehicleApplication }) => (
               <VehicleApplicationCard vehicleApplication={item} onPress={() => openModal(item)} />
             )}
-            contentContainerStyle={{ gap: 16 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefetching}
+                onRefresh={() => refetch()}
+                colors={["#0066cc"]}
+                tintColor="#0066cc"
+              />
+            }
           />
         ) : (
           <View style={styles.emptyState}>
