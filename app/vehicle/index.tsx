@@ -1,5 +1,6 @@
 import { Loading } from "@/components/Loading";
-import { OwnerCard } from "@/components/vehicle/OwnerCard";
+import { DriverCard } from "@/components/vehicle/DriverCard";
+import { SchoolMemberCard } from "@/components/vehicle/SchoolMemberCard";
 import { VehicleCard } from "@/components/vehicle/VehicleCard";
 import { VehicleNotFound } from "@/components/vehicle/VehicleNotFound";
 import { ViolationsCard } from "@/components/vehicle/ViolationsCard";
@@ -45,7 +46,7 @@ export default function VehiclePage() {
   } = useViolationRecords({
     vehicleId: id as string | undefined,
     userId: ownerId as string | undefined,
-    count: 50,
+    count: 5,
     page: 1
   });
 
@@ -102,7 +103,8 @@ export default function VehiclePage() {
       </View>
       <View style={styles.container}>
         <VehicleCard vehicle={vehicle} />
-        <OwnerCard owner={vehicle.owner!} />
+        <DriverCard driver={vehicle.driver!} />
+        <SchoolMemberCard schoolMember={vehicle.schoolMember} />
         <ViolationsCard violations={violationHistory} />
       </View>
     </ScrollView>

@@ -1,4 +1,5 @@
 import type { DriverDetailsForm } from "@/app/register";
+import { CameraPicker } from "@/components/common/CameraPicker";
 import { FilePicker } from "@/components/common/FilePicker";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
@@ -12,7 +13,8 @@ export const DriverForm = ({ setDriverDetails }: DriverFormProps) => {
     firstName: "",
     lastName: "",
     licenseId: "",
-    licenseImage: ""
+    licenseImage: "",
+    driverSelfiePicture: ""
   });
 
   useEffect(() => {
@@ -62,6 +64,14 @@ export const DriverForm = ({ setDriverDetails }: DriverFormProps) => {
         <View style={styles.section}>
           <Text style={styles.label}>License Image</Text>
           <FilePicker setUploadedImageUrl={(url) => handleChange("licenseImage", url)} />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.label}>Driver Selfie</Text>
+          <CameraPicker
+            setUploadedImageUrl={(img) => handleChange("driverSelfiePicture", img)}
+            isSelfieCamera={true}
+          />
         </View>
       </View>
     </View>

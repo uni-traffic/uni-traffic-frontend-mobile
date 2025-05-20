@@ -8,6 +8,7 @@ import {
 
 type Payload = {
   violationId: string;
+  evidence: string[];
   vehicleId?: string;
   licensePlate?: string;
   stickerNumber?: string;

@@ -1,4 +1,4 @@
-import { ViolationCard } from "@/components/common/ViolationCard";
+import { ViolationCollapsible } from "@/components/common/ViolationCollapsible";
 import { useAuth } from "@/context/AuthContext";
 import { useViolationRecords } from "@/hooks/violationRecord/useViolationRecords";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
@@ -65,7 +65,7 @@ export const VerifiedUserDashboard = () => {
             {violationRecords.map((item) => {
               return (
                 <View key={item.id} style={styles.cardStyle}>
-                  <ViolationCard record={item} />
+                  <ViolationCollapsible record={item} />
                 </View>
               );
             })}
@@ -140,9 +140,7 @@ const styles = StyleSheet.create({
     fontWeight: "medium",
     marginTop: 3
   },
-
   cardStyle: {
-    marginBottom: 8,
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

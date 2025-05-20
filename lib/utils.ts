@@ -1,3 +1,5 @@
+import type { AxiosError } from "axios";
+
 const formatDate = (date: Date) => {
   return new Date(date).toLocaleDateString("en-US", {
     month: "short",
@@ -38,4 +40,14 @@ const formatStatus = (status: string) => {
   }
 };
 
-export { formatDate, formatStatus, getStatusStyle };
+const handleApiRequestError = (error: AxiosError, defaultMessage: string) => {
+  if (error.status === 404) {
+    console.warn(error.message);
+  } else {
+    console.error(error.message ?? defaultMessage);
+  }
+
+  throw new Error(error.message ?? defaultMessage);
+};
+
+export { formatDate, formatStatus, getStatusStyle, handleApiRequestError };

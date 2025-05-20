@@ -67,13 +67,17 @@ export const FilePicker = ({ setUploadedImageUrl }: FilePickerProps) => {
           <Text style={styles.loadingText}>Uploading Image...</Text>
         </View>
       ) : isError ? (
-        <Text style={{ textAlign: "center" }}>{errorMessage}</Text>
+        <View style={{ paddingVertical: 10 }}>
+          <Text style={{ textAlign: "center" }}>{errorMessage}</Text>
+        </View>
       ) : image ? (
         <View style={styles.imageContainer}>
           <Image source={{ uri: image }} style={styles.uploadedImage} resizeMode="contain" />
         </View>
       ) : (
-        <MaterialIcons name="add-photo-alternate" size={24} color="black" />
+        <View style={{ paddingVertical: 10 }}>
+          <MaterialIcons name="add-photo-alternate" size={24} color="black" />
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -81,7 +85,6 @@ export const FilePicker = ({ setUploadedImageUrl }: FilePickerProps) => {
 
 const styles = StyleSheet.create({
   upload: {
-    padding: 10,
     borderRadius: 8,
     borderWidth: 1,
     borderStyle: "dashed",

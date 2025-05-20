@@ -24,8 +24,10 @@ export interface Vehicle {
   model: string;
   series: string;
   color: string;
+  driver: Driver;
+  schoolMember: SchoolMember;
+  images: VehicleImages;
   type: string;
-  images: string[];
   status: string;
   stickerNumber: string;
   owner: User | null;
@@ -53,6 +55,7 @@ export interface ViolationRecord {
   vehicleId: string;
   status: string;
   remarks: string;
+  evidence: string[];
   date: string;
   user: User | null;
   reporter: User | null;
@@ -78,19 +81,8 @@ export interface VehicleApplication {
   remarks: string | null;
   createdAt: Date;
   updatedAt: Date;
-  schoolMember: {
-    schoolId: string;
-    firstName: string;
-    lastName: string;
-    type: string;
-    schoolCredential: string;
-  };
-  driver: {
-    firstName: string;
-    lastName: string;
-    licenseId: string;
-    licenseImage: string;
-  };
+  schoolMember: SchoolMember;
+  driver: Driver;
   vehicle: {
     make: string;
     series: string;
@@ -106,6 +98,30 @@ export interface VehicleApplication {
   status: string;
   applicantId: string;
   applicant?: User;
+}
+
+export interface Driver {
+  licenseId: string;
+  firstName: string;
+  lastName: string;
+  licenseImage: string;
+  selfiePicture: string;
+}
+
+export interface SchoolMember {
+  schoolId: string;
+  firstName: string;
+  lastName: string;
+  type: string;
+  schoolCredential: string;
+}
+
+export interface VehicleImages {
+  front: string;
+  back: string;
+  side: string;
+  receipt: string;
+  registration: string;
 }
 
 export interface GetVehicleApplicationResponse {
